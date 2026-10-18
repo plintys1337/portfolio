@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#edf1f8">
+<title>Portfolio — Desktop Experience</title>
+<style>
+:root{--ink:#20232b;--ink-2:#555b68;--muted:#828895;--blue:#087cff;--border:rgba(37,45,61,.13);--glass:rgba(250,251,255,.76);--glass-solid:rgba(250,251,255,.96);--shadow:0 26px 85px rgba(31,42,66,.23),0 2px 8px rgba(31,42,66,.08);--radius:14px}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",Arial,sans-serif;color:var(--ink)}body{overflow:hidden;background:transparent;user-select:none;-webkit-font-smoothing:antialiased}button,input{font:inherit}button{color:inherit;border:0;cursor:pointer}button:focus-visible,input:focus-visible{outline:2px solid #1683ff;outline-offset:2px}svg{display:block}
+/* Обои */
+.wallpaper{position:fixed;inset:0;z-index:-1;overflow:hidden;background:linear-gradient(125deg,#f9fbff 0%,#e9f0fa 37%,#edf6f4 72%,#f8eff5 100%);transition:background .35s ease,filter .3s ease,opacity .3s ease}
+.wallpaper:before,.wallpaper:after,.wallpaper .orb{content:"";position:absolute;border-radius:50%;filter:blur(45px);opacity:.82;pointer-events:none}
+.wallpaper:before{width:54vw;height:54vw;min-width:450px;min-height:450px;left:-13vw;top:-24vw;background:radial-gradient(circle at 60% 60%,#fdfdff 0,#bcdfff 25%,#c9c8ff 55%,#b7d7ed 76%,transparent 77%)}
+.wallpaper:after{width:62vw;height:62vw;min-width:520px;min-height:520px;right:-22vw;top:-18vw;background:radial-gradient(circle at 40% 40%,#fefbff 0,#e7c8ef 31%,#c6dbf4 55%,#b8e6dd 72%,transparent 73%)}
+.wallpaper .orb{width:70vw;height:44vw;left:23vw;bottom:-25vw;background:radial-gradient(ellipse at center,#fff 0,#fee5e9 22%,#f5d7d9 40%,#dce9f5 68%,transparent 70%);filter:blur(55px);opacity:.9}
+body.dark .wallpaper{background:linear-gradient(125deg,#0d1322 0%,#141a2e 37%,#0f1a22 72%,#1a1020 100%)}
+body.dark .wallpaper:before{background:radial-gradient(circle at 60% 60%,#1a2440 0,#163252 25%,#202a55 55%,#0f2233 76%,transparent 77%)}
+body.dark .wallpaper:after{background:radial-gradient(circle at 40% 40%,#241a2e 0,#3a2244 31%,#1e2a44 55%,#14302a 72%,transparent 73%)}
+body.dark .wallpaper .orb{background:radial-gradient(ellipse at center,#241820 0,#3a1c22 22%,#241a20 40%,#162030 68%,transparent 70%)}
+body.dark{color:#e6eaf2}
+
+/* =========================================================
+   MENUBAR — Liquid Glass
+   ========================================================= */
+.menubar{
+  height:38px;
+  position:fixed;
+  inset:0 0 auto;
+  z-index:5000;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 18px;
+  background:rgba(250,251,255,.55);
+  backdrop-filter:blur(40px) saturate(1.8);
+  -webkit-backdrop-filter:blur(40px) saturate(1.8);
+  border-bottom:1px solid rgba(255,255,255,.45);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.65),
+    inset 0 -1px 0 rgba(0,0,0,.04),
+    0 2px 12px rgba(31,42,66,.06);
+  font-size:12px;
+  font-weight:500;
+  color:#272b34;
+  transition:background .35s ease,color .35s ease,border-color .35s ease;
+  border-radius:0 0 16px 16px;
+}
+body.dark .menubar{
+  background:rgba(18,22,32,.6);
+  border-bottom-color:rgba(255,255,255,.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.1),
+    inset 0 -1px 0 rgba(0,0,0,.2),
+    0 2px 12px rgba(0,0,0,.3);
+  color:#dfe5ef;
+}
+.menu-left{display:flex;align-items:center;gap:0;height:100%;min-width:0}
+.menu-right{display:flex;align-items:center;gap:10px;height:100%}
+.brand-name{font-weight:800;letter-spacing:.2px;font-size:13px;color:inherit;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand-name span{color:#087cff}
+body.dark .brand-name span{color:#7db8ff}
+.menubar button{background:transparent;padding:6px 0;white-space:nowrap;border-radius:8px;transition:background .15s,color .15s}
+.menubar button:hover{color:var(--blue)}
+body.dark .menubar button:hover{color:#7db8ff}
+.clock{white-space:nowrap;font-variant-numeric:tabular-nums;font-weight:600;padding:4px 0;color:inherit}
+
+/* Тёмная тема — контент окон */
+body.dark .desktop-note{background:rgba(24,30,44,.55);border-color:rgba(255,255,255,.08);color:#dfe5ef}
+body.dark .desktop-note h1{color:#f3f6fc}
+body.dark .desktop-note p{color:#a9b4c6}
+body.dark .disclaimer{color:#7b869c;border-top-color:rgba(255,255,255,.1)}
+body.dark .pill-button.light{background:rgba(255,255,255,.12);color:#e0e6f2;border-color:rgba(255,255,255,.14)}
+body.dark .desktop-file{color:#cfd6e4;text-shadow:0 1px 8px rgba(0,0,0,.6)}
+body.dark .window{background:rgba(26,31,44,.97);border-color:rgba(255,255,255,.07);box-shadow:0 26px 85px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.04)}
+body.dark .window-header{background:linear-gradient(#242a3aee,#1c2130cc);border-bottom-color:rgba(255,255,255,.06)}
+body.dark .window-title{color:#c3ccdb}
+body.dark .window-body{background:#161b27;color:#dde4ef}
+body.dark .window-actions button:hover{background:#2a3345}
+body.dark .toolbar{background:#1c2230;border-bottom-color:#222a3a;color:#8894a8}
+body.dark .search-box{background:#232b3c;color:#7c879b}
+body.dark .search-box input{color:#dde4ef}
+body.dark .page h1{color:#eef2f9}
+body.dark .page-intro{color:#9aa5b8}
+body.dark .section-title{color:#b6c0d2}
+body.dark .finder-sidebar{background:linear-gradient(90deg,#1a2030,#1d2434);border-right-color:#222a3a}
+body.dark .side-button{color:#a4afc2}
+body.dark .side-button:hover{background:#232b3c}
+body.dark .side-button.active{background:#1d3552;color:#7db8ff}
+body.dark .side-heading{color:#6f7a8e}
+body.dark .quick-card,body.dark .project-card,body.dark .video-card,body.dark .contact-tile,body.dark .resume-sheet{background:#1e2535;border-color:#293143;color:#dde4ef}
+body.dark .quick-card strong,body.dark .project-name-row strong{color:#e7ecf5}
+body.dark .quick-card span,body.dark .project-desc,body.dark .video-info p{color:#8894a8}
+body.dark .project-type,body.dark .tag{background:#293143;color:#9aa5b8}
+body.dark .upload-card{background:#1a2130;border-color:#2d3a50}
+body.dark .upload-card p{color:#7c879b}
+body.dark .small-button{background:#1d3552;color:#7db8ff}
+body.dark .small-button.neutral{background:#252d3e;color:#9aa5b8}
+body.dark .contact-tile small,body.dark .video-info p{color:#7c879b}
+body.dark .resume-sheet p,body.dark .resume-sheet li{color:#9aa5b8}
+body.dark .resume-sub{color:#7c879b}
+body.dark .resume-rule{background:#293143}
+body.dark .preview-shell{background:#1e2535}
+body.dark .preview-bar{background:#232b3c;border-bottom-color:#2a3345}
+body.dark .preview-address{background:#1a2130;color:#8894a8}
+body.dark .welcome-banner{background:linear-gradient(118deg,#1c2c48,#232a4a 47%,#3a2030);border-color:#2d3a50}
+body.dark .welcome-banner h2{color:#cfe0ff}
+body.dark .welcome-banner p{color:#8898b8}
+body.dark .welcome-banner .eyebrow{color:#7b8cb8}
+body.dark .control-panel{background:rgba(22,27,39,.95);border-color:rgba(255,255,255,.08)}
+body.dark .control-panel h4{color:#b6c0d2}
+body.dark .control-tile{background:#232b3c;color:#c3ccdb}
+body.dark .control-tile.on{background:#1682f5;color:#fff}
+body.dark .brightness{background:#232b3c;color:#9aa5b8}
+body.dark .control-caption{color:#6f7a8e}
+body.dark .dock-wrap{background:rgba(20,26,38,.72);border-color:rgba(255,255,255,.08);box-shadow:0 14px 44px rgba(0,0,0,.55),0 1px 0 rgba(255,255,255,.06) inset}
+body.dark .menu-pop{background:rgba(24,30,44,.95);border-color:rgba(255,255,255,.08);color:#dde4ef}
+body.dark .menu-pop button{color:#dde4ef}
+body.dark .menu-pop button:hover{background:#1682f5;color:#fff}
+body.dark .context-menu{background:rgba(24,30,44,.95);border-color:rgba(255,255,255,.08)}
+body.dark .context-menu button{color:#dde4ef}
+body.dark .context-sep,body.dark .menu-sep{background:#2a3345}
+
+/* Попапы */
+.menu-pop{position:fixed;z-index:6000;display:none;width:230px;padding:6px;border:1px solid #ffffffb8;border-radius:12px;background:rgba(250,251,255,.9);box-shadow:0 18px 46px #2839542b;backdrop-filter:blur(34px);transition:background .3s}
+.menu-pop button{width:100%;display:flex;gap:9px;align-items:center;background:transparent;border-radius:7px;padding:9px 10px;text-align:left;font-size:12px}
+.menu-pop button:hover{background:#087cff;color:white}
+.menu-sep{height:1px;background:var(--border);margin:5px 7px}
+
+/* Рабочий стол */
+.desktop{position:fixed;inset:38px 0 95px;overflow:hidden}
+.desktop-note{position:absolute;left:27px;top:28px;width:280px;padding:19px 18px 17px;border-radius:16px;background:rgba(255,255,255,.43);border:1px solid rgba(255,255,255,.6);box-shadow:0 12px 38px rgba(51,78,111,.07);backdrop-filter:blur(28px);color:#313b4b;transition:background .3s,color .3s,border-color .3s}
+.note-kicker{font-size:9px;text-transform:uppercase;letter-spacing:1.55px;font-weight:800;color:#64748b;margin-bottom:10px}
+.desktop-note h1{font-size:22px;letter-spacing:-.75px;line-height:1.05;margin:0 0 8px;font-weight:760}
+.desktop-note p{font-size:11px;line-height:1.55;color:#5f6d7e;margin:0 0 12px}
+.disclaimer{font-size:9px;line-height:1.45;color:#8a93a3;margin:0 0 15px;padding-top:10px;border-top:1px solid rgba(64,77,102,.12)}
+.note-actions{display:flex;gap:7px;flex-wrap:wrap}
+.pill-button{background:#1677ed;color:white;border-radius:8px;padding:8px 11px;font-size:10px;font-weight:700;box-shadow:0 3px 8px #087cff24}
+.pill-button:hover{background:#0068db}
+.pill-button.light{background:rgba(255,255,255,.7);color:#334155;border:1px solid rgba(73,92,122,.12);box-shadow:none}
+.desktop-files{position:absolute;right:24px;top:22px;display:grid;gap:15px;width:80px}
+.desktop-file{display:flex;flex-direction:column;align-items:center;gap:6px;padding:7px 2px;border-radius:9px;background:transparent;text-shadow:0 1px 8px rgba(255,255,255,.75);color:#303846;font-size:10px;text-align:center;transition:color .3s}
+.desktop-file:hover,.desktop-file:focus-visible{background:#ffffff70;outline:1px solid #ffffff9c}
+.file-icon{width:42px;height:45px;filter:drop-shadow(0 4px 5px #53657b22)}
+
+/* Окна */
+.window{position:absolute;display:flex;flex-direction:column;min-width:310px;min-height:225px;overflow:hidden;border-radius:13px;background:var(--glass-solid);border:1px solid rgba(255,255,255,.9);box-shadow:var(--shadow),0 0 0 1px rgba(96,108,132,.1);backdrop-filter:blur(38px) saturate(1.35);-webkit-backdrop-filter:blur(38px) saturate(1.35);animation:window-open .2s cubic-bezier(.2,.8,.2,1);transform-origin:center;transition:background .3s,border-color .3s}
+.window.is-hidden{display:none!important}
+.window.is-maximized{border-radius:9px}
+.window-header{height:45px;flex-shrink:0;display:grid;grid-template-columns:104px minmax(0,1fr) 104px;align-items:center;padding:0 13px;background:linear-gradient(#ffffffce,#f3f5faad);border-bottom:1px solid rgba(63,76,97,.11);touch-action:none;cursor:grab;transition:background .3s,border-color .3s}
+.window-header:active{cursor:grabbing}
+.traffic{display:flex;gap:9px;align-items:center}
+.traffic button{width:15px;height:15px;border-radius:50%;padding:0;position:relative;box-shadow:inset 0 0 0 .7px rgba(84,40,40,.18);display:grid;place-items:center}
+.traffic .close{background:#ff6058}
+.traffic .min{background:#ffbd2f}
+.traffic .zoom{background:#29c941}
+.traffic button span{opacity:0;font-size:11px;line-height:1;font-weight:700;color:#5d3828;pointer-events:none;transition:opacity .1s}
+.traffic:hover button span{opacity:1}
+.window-title{text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px;font-weight:650;color:#424956}
+.window-title-wrap{display:flex;justify-content:center;align-items:center;gap:7px;min-width:0}
+.title-app-icon{width:15px;height:15px;color:#718096;flex-shrink:0}
+.window-actions{display:flex;justify-content:flex-end;gap:5px}
+.window-actions button{width:24px;height:24px;border-radius:6px;display:grid;place-items:center;background:transparent;color:#667080;font-size:16px}
+.window-actions button:hover{background:#dce2ec}
+.window-body{min-height:0;flex:1;overflow:auto;background:#f8f9fc;color:var(--ink);user-select:text;transition:background .3s,color .3s}
+.window-body::-webkit-scrollbar{width:9px}
+.window-body::-webkit-scrollbar-thumb{border:2px solid transparent;border-radius:9px;background:#bdc4d0;background-clip:content-box}
+.toolbar{height:42px;display:flex;align-items:center;gap:10px;padding:0 17px;background:#f2f4f8;border-bottom:1px solid #e2e6ef;color:#626c7c;font-size:11px;transition:background .3s,border-color .3s,color .3s}
+.toolbar .spacer{flex:1}
+.tool-button{display:inline-flex;align-items:center;justify-content:center;gap:6px;background:transparent;border-radius:7px;padding:6px 8px;color:#576274;font-size:11px}
+.tool-button:hover{background:#e4e9f1}
+.tool-button svg{width:14px;height:14px}
+.search-box{display:flex;align-items:center;gap:7px;padding:6px 9px;min-width:135px;background:#e6e9f0;border-radius:7px;color:#818999;transition:background .3s}
+.search-box input{width:100%;min-width:0;border:0;outline:0;background:transparent;font-size:11px;color:var(--ink)}
+
+/* Контент */
+.page{padding:25px 27px 30px}
+.page-heading{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;margin-bottom:21px;flex-wrap:wrap}
+.eyebrow{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#7b8799;font-weight:800;margin-bottom:7px}
+.page h1{font-size:26px;letter-spacing:-1px;line-height:1.1;margin:0 0 7px;color:#1e2634;font-weight:750}
+.page-intro{font-size:12px;color:#737d8c;line-height:1.55;margin:0;max-width:530px}
+.tiny-count{font-size:10px;color:#7e8796;white-space:nowrap}
+.section-title{font-size:12px;font-weight:750;letter-spacing:-.1px;color:#475164;margin:21px 0 11px}
+.finder-layout{display:grid;grid-template-columns:170px minmax(0,1fr);min-height:380px}
+.finder-sidebar{padding:18px 10px;background:linear-gradient(90deg,#f0f2f7,#f4f6fa);border-right:1px solid #e1e5ec;transition:background .3s,border-color .3s}
+.side-heading{font-size:9px;color:#959cab;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:0 9px;margin:4px 0 8px}
+.side-button{display:flex;align-items:center;gap:9px;width:100%;padding:8px 9px;border-radius:7px;background:transparent;text-align:left;color:#596476;font-size:11px;margin-bottom:2px}
+.side-button svg{width:15px;height:15px;color:#75859d;flex-shrink:0}
+.side-button:hover{background:#e5eaf2}
+.side-button.active{background:#dce9fb;color:#1267ce;font-weight:650}
+.side-button.active svg{color:#1676e9}
+.finder-main{padding:24px 25px}
+.welcome-banner{position:relative;overflow:hidden;padding:22px;border-radius:14px;background:linear-gradient(118deg,#d9e9ff,#e5e9ff 47%,#fae8f0);margin-bottom:22px;border:1px solid #fff;transition:background .3s,border-color .3s}
+.welcome-banner:after{content:"";position:absolute;right:-35px;top:-75px;width:210px;height:210px;border-radius:50%;background:radial-gradient(circle at 38% 38%,#fff9,#98baff8c 48%,#9b8cff22 72%);filter:blur(3px)}
+.welcome-banner .eyebrow{color:#5e78a8}
+.welcome-banner h2{position:relative;z-index:1;font-size:22px;letter-spacing:-.7px;margin:0 0 7px;color:#283a60}
+.welcome-banner p{position:relative;z-index:1;margin:0;color:#62738f;font-size:11px;line-height:1.5;max-width:335px}
+.quick-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}
+.quick-card{min-height:115px;text-align:left;padding:14px;border-radius:11px;background:white;border:1px solid #e5e8ef;box-shadow:0 3px 12px #293a5508;transition:transform .16s,box-shadow .16s,background .3s,border-color .3s}
+.quick-card:hover{transform:translateY(-2px);box-shadow:0 9px 22px #293a5514}
+.quick-icon{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;margin-bottom:11px}
+.quick-icon svg{width:20px;height:20px}
+.quick-card strong{display:block;font-size:11px;margin-bottom:3px}
+.quick-card span{display:block;font-size:10px;line-height:1.4;color:#858d9b}
+
+/* Галерея проектов */
+.project-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.project-card{min-width:0;overflow:hidden;border:1px solid #e3e7ef;background:#fff;border-radius:12px;box-shadow:0 3px 13px rgba(43,60,87,.045);transition:transform .18s,box-shadow .18s,background .3s,border-color .3s;cursor:pointer}
+.project-card:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(43,60,87,.12)}
+.project-screen{height:151px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:17px}
+.screen-browser{position:absolute;inset:13px 14px 0;border-radius:7px 7px 0 0;background:#fff;box-shadow:0 7px 17px #17203326;overflow:hidden}
+.browser-top{height:15px;background:#f1f3f7;border-bottom:1px solid #e8ebf0;display:flex;gap:3px;align-items:center;padding:0 6px}
+.browser-top i{width:4px;height:4px;border-radius:50%;background:#ef6b67}
+.browser-top i:nth-child(2){background:#eac05b}
+.browser-top i:nth-child(3){background:#6ec78b}
+.site-screen{height:calc(100% - 15px);padding:15px 13px;position:relative;overflow:hidden}
+.site-brand{font-weight:850;letter-spacing:1.1px;font-size:10px}
+.site-nav{position:absolute;right:13px;top:15px;font-size:5px;letter-spacing:.3px;opacity:.65}
+.site-hero{margin-top:19px;font-size:18px;letter-spacing:-.6px;line-height:1.02;font-weight:800;max-width:70%}
+.site-sub{font-size:6px;opacity:.65;margin-top:6px;max-width:65%}
+.site-cta{font-size:6px;display:inline-block;margin-top:9px;padding:5px 9px;border-radius:2px;background:#272727;color:#fff}
+.site-shape{position:absolute;width:82px;height:100px;right:11px;bottom:-12px;border-radius:48% 48% 5px 5px;transform:rotate(8deg);box-shadow:0 4px 12px #0002}
+.screen-noir{background:#f2eee9;color:#26211e}.screen-noir .site-shape{background:linear-gradient(145deg,#e2c9b5,#80675e)}.screen-noir .site-brand{letter-spacing:3px}
+.screen-cake{background:#f8edf0;color:#40282d}.screen-cake .site-shape{width:75px;height:74px;right:13px;bottom:5px;border-radius:42% 42% 10px 10px;background:linear-gradient(145deg,#fff,#e3b9c3);box-shadow:inset 0 -10px #c78b9a,0 5px 12px #8d5b6c30}
+.screen-flowers{background:#f0f0e7;color:#344038}.screen-flowers .site-shape{width:90px;height:89px;right:4px;bottom:-13px;border-radius:56% 43% 50% 30%;background:radial-gradient(circle at 50% 35%,#e9bfd1 0 12%,#aa789f 13% 21%,transparent 22%),radial-gradient(circle at 30% 36%,#e7c9d6 0 13%,transparent 14%),linear-gradient(45deg,#426e52,#a7bb88)}
+.screen-shuffle{background:#eaf5ed;color:#274737}.screen-shuffle .site-shape{width:72px;height:72px;right:15px;bottom:7px;border-radius:19px;transform:rotate(-8deg);background:linear-gradient(135deg,#6ed79d,#298b61)}
+.screen-beauty{background:#f9e8e9;color:#412c31}.screen-beauty .site-shape{width:77px;height:107px;right:8px;bottom:-18px;border-radius:55% 55% 5px 5px;background:linear-gradient(145deg,#eed0c9,#bd867e)}
+.screen-cloud{background:#11182a;color:#f4f7ff}.screen-cloud .site-shape{width:85px;height:85px;right:6px;bottom:-9px;border-radius:50%;background:radial-gradient(circle at 40% 40%,#78d7ff,#5a60e9 45%,#151a42 70%);filter:blur(1px)}
+.screen-project{background:#e9eaf9;color:#333c73}.screen-project .site-shape{width:78px;height:83px;right:12px;bottom:4px;border-radius:14px;background:linear-gradient(135deg,#777beb,#a5b2ff)}
+.project-meta{padding:13px 14px 14px}
+.project-name-row{display:flex;align-items:center;gap:8px;margin-bottom:5px;flex-wrap:wrap}
+.project-name-row strong{font-size:12px;letter-spacing:-.15px}
+.project-type{font-size:9px;padding:4px 6px;border-radius:5px;background:#f0f3f8;color:#758093;white-space:nowrap}
+.project-desc{font-size:10px;line-height:1.5;color:#77808e;margin:0 0 11px;min-height:30px}
+.project-bottom{display:flex;align-items:center;justify-content:space-between;gap:9px;flex-wrap:wrap}
+.tag-list{display:flex;flex-wrap:wrap;gap:5px}
+.tag{background:#f0f4fa;color:#657389;padding:4px 6px;border-radius:5px;font-size:9px}
+.arrow-link{color:#087cff;font-weight:750;font-size:11px;white-space:nowrap;background:transparent;padding:3px}
+
+/* Превью проекта */
+.preview-shell{background:white;min-height:100%;color:#1f2734;transition:background .3s,color .3s}
+.preview-bar{height:36px;padding:0 12px;display:flex;align-items:center;gap:8px;background:#eff2f7;border-bottom:1px solid #e0e4eb;transition:background .3s,border-color .3s}
+.preview-dots{display:flex;gap:4px}
+.preview-dots i{width:7px;height:7px;border-radius:50%;background:#ff6058}
+.preview-dots i:nth-child(2){background:#ffbd2f}
+.preview-dots i:nth-child(3){background:#29c941}
+.preview-address{flex:1;text-align:center;background:#e0e5ed;color:#727c8a;border-radius:6px;padding:5px;font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.preview-visit{background:transparent;color:#087cff;font-size:10px;font-weight:700;white-space:nowrap}
+.mock-site{min-height:410px;padding:25px 28px 30px;position:relative;overflow:hidden}
+.mock-site nav{display:flex;justify-content:space-between;align-items:center;gap:9px;font-size:9px;letter-spacing:1px;font-weight:800}
+.mock-site nav .navlinks{display:flex;gap:12px;font-weight:550;letter-spacing:0;color:currentColor;opacity:.65}
+.mock-site .mock-hero{position:relative;z-index:2;max-width:60%;padding-top:45px}
+.mock-site h2{font-size:clamp(27px,4vw,44px);line-height:.98;letter-spacing:-1.8px;margin:0 0 12px}
+.mock-site p{font-size:11px;line-height:1.6;opacity:.72;max-width:310px}
+.mock-site .mock-button{margin-top:10px;padding:10px 14px;font-size:10px;font-weight:750;border:0;border-radius:3px;background:#222;color:white}
+.mock-visual{position:absolute;width:45%;height:70%;right:2%;bottom:-4%;border-radius:46% 46% 2% 2%;box-shadow:0 20px 60px #0002;transform:rotate(4deg)}
+.mock-info-row{position:absolute;bottom:17px;left:28px;right:28px;border-top:1px solid currentColor;padding-top:10px;display:flex;justify-content:space-between;gap:10px;font-size:8px;opacity:.58}
+.mock-site.noir{background:#ede7df;color:#2b2622}.mock-site.noir .mock-brand{letter-spacing:3px}.mock-site.noir .mock-visual{background:linear-gradient(135deg,#d8b9a5,#876a60)}
+.mock-site.cake{background:#fbf1f2;color:#422d33}.mock-site.cake .mock-visual{background:linear-gradient(150deg,#fff9fa,#e9c1ca 48%,#bd8995);border-radius:45% 45% 8% 8%}
+.mock-site.flowers{background:#f0f1e8;color:#324333}.mock-site.flowers .mock-visual{background:radial-gradient(circle at 53% 28%,#edc5d5 0 12%,#a981a5 13% 20%,transparent 21%),radial-gradient(circle at 25% 43%,#f1d7e0 0 14%,transparent 15%),linear-gradient(135deg,#66885d,#b9c69b)}
+.mock-site.shuffle{background:#eef7ef;color:#214a32}.mock-site.shuffle .mock-visual{background:linear-gradient(135deg,#9ee3ba,#3caa75);border-radius:24px;transform:rotate(-7deg)}
+.mock-site.beauty{background:#f8e9ea;color:#4a3035}.mock-site.beauty .mock-visual{background:linear-gradient(145deg,#e7c6be,#b57f78)}
+.mock-site.cloudquake{background:#11182b;color:#f5f7ff}.mock-site.cloudquake .mock-visual{border-radius:50%;background:radial-gradient(circle at 40% 35%,#90ebff,#6565f3 44%,#171b47 72%)}
+.mock-site.studio{background:#eff0ff;color:#33396c}.mock-site.studio .mock-visual{background:linear-gradient(135deg,#aab4ff,#7179df);border-radius:20px}
+
+/* Видео */
+.video-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.video-card{overflow:hidden;border:1px solid #e2e6ee;border-radius:12px;background:#fff;transition:background .3s,border-color .3s}
+.video-poster{height:139px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;background:linear-gradient(135deg,#d9e7fb,#e8dcf7)}
+.video-poster:before{content:"";position:absolute;width:160px;height:160px;left:-25px;top:-64px;border-radius:35px;transform:rotate(31deg);background:#ffffff68}
+.video-poster:after{content:"";position:absolute;width:150px;height:190px;right:-35px;bottom:-95px;border-radius:48%;background:#8aa8ee65;transform:rotate(-20deg)}
+.poster-window{position:relative;z-index:1;width:69%;height:75%;border-radius:7px;background:#ffffffdf;border:1px solid #fff;box-shadow:0 9px 20px #354d7830;overflow:hidden;padding:10px}
+.poster-bar{height:5px;width:35%;background:#c3cfe3;border-radius:5px;margin-bottom:8px}
+.poster-line{height:4px;width:64%;background:#d6deeb;border-radius:5px;margin:5px 0}
+.poster-tiles{display:flex;gap:5px;margin-top:10px}
+.poster-tiles i{flex:1;height:35px;border-radius:4px;background:linear-gradient(135deg,#b4caff,#eac9dd)}
+.poster-tiles i:nth-child(2){background:linear-gradient(135deg,#d5e7d8,#a3d2b4)}
+.poster-tiles i:nth-child(3){background:linear-gradient(135deg,#f1d6c7,#e4a4ad)}
+.play-badge{position:absolute;z-index:2;width:39px;height:39px;border-radius:50%;display:grid;place-items:center;background:#ffffffdf;box-shadow:0 4px 15px #34445b2b;color:#2377e7}
+.play-badge svg{width:14px;height:14px;margin-left:2px}
+.video-duration{position:absolute;z-index:2;right:9px;bottom:8px;font-size:9px;font-weight:750;color:#fff;background:#212a3dc9;padding:4px 6px;border-radius:4px}
+.video-info{padding:12px 13px 13px}
+.video-info strong{display:block;font-size:11px;margin-bottom:5px}
+.video-info p{font-size:10px;color:#818998;margin:0 0 10px;line-height:1.45}
+.video-actions{display:flex;gap:6px;flex-wrap:wrap}
+.small-button{padding:7px 9px;border-radius:7px;font-size:10px;background:#edf3fc;color:#2676d8;font-weight:700}
+.small-button:hover{background:#dceafe}
+.small-button.neutral{background:#f2f3f6;color:#687385}
+.upload-card{min-height:235px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:9px;text-align:center;padding:20px;border:1px dashed #bbc8da;border-radius:12px;background:#f7f9fc;transition:background .3s,border-color .3s}
+.upload-symbol{width:43px;height:43px;border-radius:13px;display:grid;place-items:center;background:#e3efff;color:#2379e8}
+.upload-symbol svg{width:21px;height:21px}
+.upload-card strong{font-size:12px}
+.upload-card p{font-size:10px;line-height:1.5;color:#87909f;max-width:190px;margin:0}
+.hidden-input{display:none}
+
+/* О нас / контакты / резюме */
+.about-layout{display:grid;grid-template-columns:145px minmax(0,1fr);gap:23px;align-items:start}
+.profile-art{height:160px;border-radius:15px;background:linear-gradient(145deg,#d6e7ff,#ddd9fa 50%,#f5dce8);border:1px solid #fff;display:grid;place-items:center;position:relative;overflow:hidden}
+.profile-orb{width:90px;height:105px;border-radius:48% 48% 42% 42%;background:linear-gradient(145deg,#fff,#b3c9ea);box-shadow:inset -10px -10px 22px #708bb733,0 15px 20px #53698a2b;position:relative}
+.profile-orb:before{content:"";position:absolute;width:44px;height:44px;border-radius:50%;top:-25px;left:23px;background:linear-gradient(145deg,#fff,#c3d4ed);box-shadow:0 4px 10px #647ca32b}
+.profile-orb:after{content:"";position:absolute;left:-25px;right:-25px;bottom:-13px;height:50px;border-radius:45px 45px 0 0;background:linear-gradient(120deg,#8ca9dc,#bfb6ed)}
+.skill-list{display:grid;gap:10px}
+.skill-item{display:grid;grid-template-columns:110px 1fr 30px;gap:10px;align-items:center;font-size:10px;color:#687384}
+.meter{height:5px;border-radius:6px;background:#e6eaf1;overflow:hidden}
+.meter i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,#1681ff,#73bcff)}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.contact-tile{display:flex;align-items:center;gap:11px;padding:14px;border:1px solid #e4e8f0;border-radius:11px;background:white;min-width:0}
+.contact-icon{width:36px;height:36px;flex-shrink:0;display:grid;place-items:center;border-radius:10px;background:#e5f0ff;color:#2479dc}
+.contact-icon svg{width:18px;height:18px}
+.contact-tile small{display:block;color:#9098a6;font-size:9px;margin-bottom:4px}
+.contact-tile strong{display:block;font-size:10px;font-weight:650;overflow-wrap:anywhere}
+.resume-sheet{max-width:530px;background:white;border:1px solid #e5e8ef;border-radius:12px;padding:24px;margin:0 auto;box-shadow:0 6px 22px #33415c0a}
+.resume-sheet h2{font-size:21px;letter-spacing:-.5px;margin:0 0 5px}
+.resume-sub{font-size:10px;color:#818998;margin-bottom:17px}
+.resume-rule{height:1px;background:#e8ebf1;margin:15px 0}
+.resume-sheet h3{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#087cff;margin:14px 0 7px}
+.resume-sheet p,.resume-sheet li{font-size:10px;line-height:1.6;color:#697385}
+.resume-sheet ul{padding-left:15px;margin:5px 0}
+
+/* Настройки */
+.settings-layout{display:grid;grid-template-columns:170px minmax(0,1fr);min-height:100%}
+.settings-nav{padding:16px 10px;background:linear-gradient(90deg,#f0f2f7,#f4f6fa);border-right:1px solid #e1e5ec;transition:background .3s,border-color .3s}
+.settings-content{padding:22px 25px}
+.setting-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px solid #e8ebf1}
+.setting-row:last-child{border-bottom:0}
+.setting-row-info strong{display:block;font-size:11px;margin-bottom:3px}
+.setting-row-info span{display:block;font-size:10px;color:#858d9b;line-height:1.4;max-width:340px}
+.setting-control{flex-shrink:0}
+.switch{position:relative;width:38px;height:22px;border-radius:12px;background:#c9d0dc;transition:background .2s;display:block;cursor:pointer;padding:0}
+.switch:after{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 3px #0003;transition:transform .2s}
+.switch.on{background:#1682f5}
+.switch.on:after{transform:translateX(16px)}
+.seg{display:inline-flex;background:#e6e9f0;border-radius:8px;padding:3px;gap:2px;transition:background .3s}
+.seg button{padding:6px 10px;border-radius:6px;font-size:10px;font-weight:650;color:#5b6577;background:transparent}
+.seg button.active{background:#fff;color:#1e2634;box-shadow:0 1px 3px #0002}
+body.dark .seg{background:#232b3c}
+body.dark .seg button{color:#9aa5b8}
+body.dark .seg button.active{background:#2e3a50;color:#e7ecf5}
+.range{width:150px;accent-color:#0b7fff}
+.setting-group-title{font-size:9px;letter-spacing:1.2px;text-transform:uppercase;color:#959cab;font-weight:800;margin:18px 0 4px}
+.setting-group-title:first-child{margin-top:0}
+
+/* Dock */
+.dock-wrap{position:fixed;z-index:4500;bottom:10px;left:50%;transform:translateX(-50%);width:min(720px,calc(100vw - 40px));max-width:calc(100vw - 40px);padding:8px 14px 10px;border:1px solid rgba(255,255,255,.84);border-radius:18px;background:rgba(247,249,255,.62);box-shadow:0 14px 44px rgba(49,65,94,.22),0 1px 0 #ffffffa8 inset;backdrop-filter:blur(35px) saturate(1.5);-webkit-backdrop-filter:blur(35px) saturate(1.5);transition:background .3s,border-color .3s}
+.dock{display:flex;align-items:flex-end;justify-content:center;gap:10px}
+.dock-icon{width:48px;height:48px;flex-shrink:0;position:relative;display:grid;place-items:center;border-radius:12px;background:linear-gradient(145deg,#fff,#dfe6f2);box-shadow:0 3px 8px #3b4d6822,inset 0 1px 0 #fff;transition:transform .13s cubic-bezier(.2,.8,.2,1);transform-origin:bottom;will-change:transform;color:#fff}
+.dock-icon svg{width:28px;height:28px}
+.dock-icon[data-app="finder"]{background:linear-gradient(145deg,#b1e4ff,#398fe5)}
+.dock-icon[data-app="sites"]{background:linear-gradient(145deg,#ffdc73,#f5a637)}
+.dock-icon[data-app="videos"]{background:linear-gradient(145deg,#f1c8f5,#a46de5)}
+.dock-icon[data-app="about"]{background:linear-gradient(145deg,#d9e4f9,#8fa7d8);color:#fff}
+.dock-icon[data-app="contacts"]{background:linear-gradient(145deg,#9ce5c7,#38b88a)}
+.dock-icon[data-app="resume"]{background:linear-gradient(145deg,#fff,#dae3f4);color:#de5b63}
+.dock-icon[data-app="safari"]{background:linear-gradient(145deg,#9fe5fc,#3a91df)}
+.dock-icon[data-app="settings"]{background:linear-gradient(145deg,#f4f5f7,#a9b3c2);color:#fff}
+.dock-icon[data-app="trash"]{background:linear-gradient(145deg,#fff,#d6dce6);color:#8894a4}
+.dock-icon:hover{transform:translateY(-6px) scale(1.06)}
+.dock-icon:after{content:"";position:absolute;bottom:-6px;width:4px;height:4px;border-radius:50%;background:#3e4d64;opacity:0}
+.dock-icon.active:after{opacity:.8}
+.dock-icon .tooltip{position:absolute;bottom:60px;left:50%;transform:translateX(-50%);background:rgba(42,48,60,.89);color:#fff;border:1px solid #ffffff35;padding:5px 9px;border-radius:6px;font-size:10px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .12s;box-shadow:0 4px 12px #0002}
+.dock-icon:hover .tooltip{opacity:1}
+.dock-divider{height:38px;width:1px;background:#7d8ba23b;margin:0 4px 2px}
+
+/* Прочее */
+.context-menu{position:fixed;z-index:8000;display:none;min-width:190px;padding:5px;border:1px solid #ffffffc9;border-radius:11px;background:rgba(250,251,255,.9);box-shadow:0 14px 38px #2636502d;backdrop-filter:blur(28px);transition:background .3s}
+.context-menu button{display:block;width:100%;text-align:left;background:transparent;padding:8px 10px;border-radius:7px;font-size:11px;color:#414b5b}
+.context-menu button:hover{background:#087cff;color:#fff}
+.context-sep{height:1px;background:#dfe4ec;margin:4px 6px}
+.toast{position:fixed;z-index:9000;left:50%;top:50px;transform:translate(-50%,-7px);padding:9px 13px;background:rgba(34,43,57,.9);border:1px solid #ffffff4a;color:white;border-radius:9px;font-size:11px;box-shadow:0 8px 28px #0002;opacity:0;pointer-events:none;transition:all .18s;white-space:nowrap;max-width:calc(100vw - 20px);overflow:hidden;text-overflow:ellipsis}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@keyframes window-open{from{opacity:0;transform:scale(.97) translateY(5px)}to{opacity:1;transform:scale(1) translateY(0)}}
+
+@media(max-width:760px){
+.menubar{padding:0 12px}
+.brand-name{font-size:12px}
+.menu-right{gap:9px}
+.desktop{inset:38px 0 85px}
+.desktop-note{left:12px;top:13px;width:min(250px,calc(100vw - 110px));padding:13px}
+.desktop-note h1{font-size:18px}
+.desktop-note p{font-size:10px}
+.desktop-files{right:7px;top:12px;width:62px;gap:10px}
+.file-icon{width:35px;height:38px}
+.desktop-file{font-size:9px}
+.window{min-width:0!important;left:7px!important;top:44px!important;width:calc(100vw - 14px)!important;height:calc(100% - 53px)!important;max-height:none!important;border-radius:13px}
+.window-header{grid-template-columns:72px minmax(0,1fr) 64px;height:42px}
+.window-title{font-size:11px}
+.finder-layout{grid-template-columns:115px minmax(0,1fr)}
+.finder-sidebar{padding:12px 6px}
+.side-button{font-size:10px;padding:8px 6px;gap:6px}
+.side-heading{padding:0 6px}
+.finder-main{padding:15px}
+.welcome-banner{padding:17px}
+.welcome-banner h2{font-size:19px}
+.quick-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.quick-card{min-height:100px;padding:11px}
+.page{padding:19px 16px 24px}
+.page h1{font-size:23px}
+.project-grid,.video-grid{gap:10px}
+.project-screen{height:120px;padding:10px}
+.screen-browser{inset:9px 9px 0}
+.project-meta{padding:10px}
+.project-desc{min-height:44px}
+.project-bottom{align-items:flex-start;flex-direction:column}
+.mock-site{padding:22px 18px 30px;min-height:380px}
+.mock-site .mock-hero{padding-top:39px;max-width:66%}
+.mock-site h2{font-size:29px}
+.mock-info-row{left:18px;right:18px}
+.about-layout{grid-template-columns:100px minmax(0,1fr);gap:14px}
+.profile-art{height:132px}
+.profile-orb{transform:scale(.82)}
+.skill-item{grid-template-columns:80px 1fr 23px;gap:7px}
+.contact-grid{grid-template-columns:1fr}
+.dock-wrap{bottom:6px;width:calc(100vw - 16px);max-width:calc(100vw - 16px);padding:7px 10px 9px;border-radius:16px}
+.dock{gap:6px}
+.dock-icon{width:41px;height:41px;border-radius:11px}
+.dock-icon svg{width:24px;height:24px}
+.dock-divider{height:32px;margin:0 2px}
+.search-box{min-width:90px}
+.toolbar{padding:0 10px;gap:5px}
+.settings-layout{grid-template-columns:1fr}
+.settings-nav{display:flex;flex-wrap:wrap;gap:4px;padding:10px 8px;border-right:0;border-bottom:1px solid #e1e5ec;background:#f0f2f7}
+.settings-nav .side-heading{display:none}
+.settings-nav .side-button{width:auto;margin:0}
+.settings-content{padding:16px}
+.range{width:110px}
+}
+@media(max-width:420px){
+.menubar{font-size:10px;padding:0 10px}
+.menu-right{gap:7px}
+.brand-name{font-size:11px}
+.desktop-note{width:calc(100vw - 105px);top:9px;left:8px;padding:10px}
+.desktop-note h1{font-size:16px}
+.desktop-note p{font-size:9px;margin-bottom:9px}
+.note-kicker{font-size:8px;margin-bottom:7px}
+.note-actions .pill-button{padding:7px 8px;font-size:9px}
+.desktop-files{right:3px;top:9px}
+.desktop-file{font-size:8px}
+.file-icon{width:31px;height:35px}
+.window-header{grid-template-columns:66px minmax(0,1fr) 54px;padding:0 9px}
+.traffic{gap:6px}
+.traffic button{width:13px;height:13px}
+.window-actions button{width:21px}
+.finder-layout{grid-template-columns:96px minmax(0,1fr)}
+.side-button{font-size:9px;gap:4px}
+.side-button svg{width:13px;height:13px}
+.finder-main{padding:10px}
+.welcome-banner{padding:12px}
+.welcome-banner h2{font-size:16px}
+.welcome-banner p{font-size:10px}
+.quick-grid{gap:7px}
+.quick-card{padding:9px;min-height:94px}
+.quick-icon{width:29px;height:29px;margin-bottom:8px}
+.quick-card strong{font-size:10px}
+.quick-card span{font-size:9px}
+.page{padding:17px 12px}
+.page-heading{margin-bottom:15px}
+.page h1{font-size:21px}
+.page-intro{font-size:11px}
+.project-grid,.video-grid{grid-template-columns:1fr}
+.project-screen{height:145px}
+.project-bottom{flex-direction:row;align-items:center}
+.project-desc{min-height:0}
+.video-poster{height:150px}
+.dock-icon{width:35px;height:35px;border-radius:9px}
+.dock-icon svg{width:21px;height:21px}
+.dock{gap:4px}
+.dock-wrap{padding:6px 6px 9px}
+.dock-divider{height:27px;margin:0 1px 1px}
+.dock-icon .tooltip{display:none}
+.about-layout{grid-template-columns:1fr}
+.profile-art{height:100px}
+.profile-orb{transform:scale(.7)}
+.contact-tile{padding:10px}
+.skill-item{grid-template-columns:82px 1fr 20px}
+.setting-row{flex-direction:column;align-items:flex-start;gap:10px}
+}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wallpaper"><div class="orb"></div></div>
+
+<header class="menubar">
+ <div class="menu-left">
+  <span class="brand-name">Тут будет название <span></span></span>
+ </div>
+ <div class="menu-right">
+  <button id="controlToggle" aria-label="Пункт управления" title="Пункт управления">
+    <svg viewBox="0 0 24 24" fill="currentColor" width="15" height="15" style="display:block;opacity:.75">
+      <rect x="2" y="3" width="8" height="8" rx="3"/>
+      <rect x="13" y="3" width="9" height="8" rx="3"/>
+      <rect x="2" y="14" width="8" height="7" rx="3"/>
+      <rect x="13" y="14" width="9" height="7" rx="3"/>
+    </svg>
+  </button>
+  <button aria-label="Поиск" id="searchToggle" title="Поиск">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15" style="display:block;opacity:.75">
+      <circle cx="10.7" cy="10.7" r="6.7"/>
+      <path d="m16 16 5 5"/>
+    </svg>
+  </button>
+  <span class="clock" id="clock">Сб, 17 окт. 13:11</span>
+ </div>
+</header>
+
+<main class="desktop" id="desktop">
+ <section class="desktop-note">
+  <div class="note-kicker">Digital portfolio · 2026</div>
+  <h1>Привет, это<br>наше пространство.</h1>
+  <p>Мы — студия веб-разработки и дизайна интерфейсов. Здесь собраны наши проекты и цифровые идеи в формате рабочего стола.</p>
+  <p class="disclaimer">О проекте: это независимый концепт-проект. Не связан с Apple Inc. и не одобрен ею.</p>
+  <div class="note-actions">
+   <button class="pill-button" data-open="sites">Смотреть сайты</button>
+   <button class="pill-button light" data-open="about">О нас</button>
+  </div>
+ </section>
+ <div class="desktop-files">
+  <button class="desktop-file" data-open="sites"><svg class="file-icon" viewBox="0 0 46 50"><defs><linearGradient id="folderG" x1="0" y1="0" x2="0.9" y2="1"><stop stop-color="#8fd0ff"/><stop offset="1" stop-color="#3689e6"/></linearGradient></defs><path d="M3 10a4 4 0 0 1 4-4h10l5 5h17a4 4 0 0 1 4 4v24a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4z" fill="url(#folderG)"/><path d="M3 17h40v22a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4z" fill="#5eb3f4"/></svg><span>Сайты</span></button>
+  <button class="desktop-file" data-open="videos"><svg class="file-icon" viewBox="0 0 46 50"><defs><linearGradient id="videoG" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#efb9f7"/><stop offset="1" stop-color="#9861d6"/></linearGradient></defs><rect x="4" y="4" width="38" height="42" rx="9" fill="url(#videoG)"/><path d="m19 15 13 10-13 10z" fill="#fff"/></svg><span>Видео</span></button>
+  <button class="desktop-file" data-open="resume"><svg class="file-icon" viewBox="0 0 46 50"><path d="M8 3h21l10 10v33H8z" fill="#fff" stroke="#d4dce7"/><path d="M29 3v11h10" fill="#dfe8f4"/><path d="M14 24h19M14 29h19M14 34h14" stroke="#8da0ba" stroke-width="2" stroke-linecap="round"/><rect x="13" y="14" width="12" height="5" rx="2" fill="#f1787a"/></svg><span>Резюме</span></button>
+ </div>
+</main>
+
+<div class="dock-wrap"><nav class="dock" id="dock" aria-label="Dock"></nav></div>
+<div class="menu-pop" id="menuPop"></div>
+<div class="control-panel" id="controlPanel"></div>
+<div class="context-menu" id="contextMenu"></div>
+<div class="toast" id="toast" role="status"></div>
+<input type="file" class="hidden-input" id="videoFileInput" accept="video/*" multiple>
+<input type="file" class="hidden-input" id="resumeFileInput" accept="application/pdf,.pdf">
+
+<script>
+/* =========================================================
+   SVG-иконки приложений
+   ========================================================= */
+const SVG={
+ finder:`<svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="findBlue" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#bce8ff"/><stop offset="1" stop-color="#52a1ed"/></linearGradient></defs><rect x="5" y="6" width="54" height="52" rx="13" fill="url(#findBlue)"/><path d="M32 7v50" stroke="#fff" stroke-opacity=".8" stroke-width="1.5"/><path d="M18 25h.1M46 25h.1" stroke="#17426e" stroke-width="5" stroke-linecap="round"/><path d="M17 38c4 8 10 9 15 2 5 7 11 6 15-2" fill="none" stroke="#17426e" stroke-width="2.5" stroke-linecap="round"/></svg>`,
+ sites:`<svg viewBox="0 0 64 64"><path d="M9 17a5 5 0 0 1 5-5h14l6 6h16a5 5 0 0 1 5 5v23a5 5 0 0 1-5 5H14a5 5 0 0 1-5-5z" fill="#f5bd4f"/><path d="M9 25h46v21a5 5 0 0 1-5 5H14a5 5 0 0 1-5-5z" fill="#ffc955"/><path d="m24 32 7 7 12-12" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+ videos:`<svg viewBox="0 0 64 64"><defs><linearGradient id="vidGrad" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f5c3f6"/><stop offset="1" stop-color="#ad71e7"/></linearGradient></defs><rect x="6" y="5" width="52" height="54" rx="14" fill="url(#vidGrad)"/><path d="m26 19 18 13-18 13z" fill="#fff"/></svg>`,
+ about:`<svg viewBox="0 0 64 64"><rect x="5" y="5" width="54" height="54" rx="15" fill="#91abd9"/><circle cx="32" cy="24" r="10" fill="#f5f7ff"/><path d="M13 54c1-13 8-20 19-20s18 7 19 20" fill="#f5f7ff"/></svg>`,
+ contacts:`<svg viewBox="0 0 64 64"><rect x="6" y="9" width="52" height="46" rx="12" fill="#43c18e"/><path d="M15 21 32 35 49 21" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 45 27 34M49 45 37 34" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>`,
+ resume:`<svg viewBox="0 0 64 64"><path d="M14 5h25l12 12v41H14z" fill="#fff"/><path d="M39 5v13h12" fill="#dfe6f2"/><path d="M22 31h21M22 38h21M22 45h16" stroke="#9ba9bd" stroke-width="2.5" stroke-linecap="round"/><rect x="21" y="15" width="13" height="6" rx="2" fill="#ef6c73"/></svg>`,
+ safari:`<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="27" fill="#fff"/><circle cx="32" cy="32" r="24" fill="#3299ed"/><path d="m42 20-7 17-13 7 7-17z" fill="#fff"/><path d="m42 20-13 7-7 17 13-7z" fill="#e95365"/><circle cx="32" cy="32" r="24" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="1.5"/></svg>`,
+ settings:`<svg viewBox="0 0 64 64"><defs><linearGradient id="gearGrad" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#e5e9ef"/><stop offset="1" stop-color="#8e9bad"/></linearGradient></defs><rect x="5" y="5" width="54" height="54" rx="15" fill="url(#gearGrad)"/><path d="M32 17v5m0 20v5M17 32h5m20 0h5M21.4 21.4l3.6 3.6m14 14 3.6 3.6m0-21.2L39 25m-14 14-3.6 3.6" stroke="#fff" stroke-width="5" stroke-linecap="round"/><circle cx="32" cy="32" r="12" fill="#f9fbff"/><circle cx="32" cy="32" r="6" fill="#a2aebf"/></svg>`,
+ trash:`<svg viewBox="0 0 64 64"><path d="M18 20h28l-3 34H21z" fill="#f2f4f8" stroke="#b6c0ce" stroke-width="1.5"/><path d="M14 16h36M26 12h12" stroke="#8b98aa" stroke-width="4" stroke-linecap="round"/><path d="M27 27v18M37 27v18" stroke="#bdc6d2" stroke-width="2.5" stroke-linecap="round"/></svg>`
+};
+const appNames={finder:'Files',sites:'Сайты',videos:'Видео',about:'О нас',contacts:'Контакты',resume:'Резюме',safari:'Browser',settings:'Настройки',trash:'Корзина'};
+const dockApps=['finder','sites','videos','about','contacts','resume','safari','settings','trash'];
+
+/* =========================================================
+   Данные проектов
+   ========================================================= */
+const projects=[
+ {id:'noir',name:'NOIR',subtitle:'Магазин современной моды',type:'Интернет-магазин',category:'fashion',tags:['E-commerce','Адаптивный'],description:'Редакционная подача коллекции, лаконичная типографика, каталог и премиальная визуальная атмосфера.',className:'noir',brand:'NOIR',heading:'Форма. Текстура. Характер.',copy:'Новая коллекция — продуманный минимализм для тех, кто выбирает своё.',cta:'ОТКРЫТЬ КОЛЛЕКЦИЮ',nav:'NEW IN   COLLECTION   ABOUT'},
+ {id:'amtort',name:'АМ ТОРТ',subtitle:'Сайт кондитерской',type:'Сайт для бизнеса',category:'food',tags:['Каталог','Заявка'],description:'Тёплый премиальный концепт для десертов на заказ с каталогом, историями бренда и формой заявки.',className:'cake',brand:'АМ ТОРТ',heading:'Сладкое искусство — на ваш праздник.',copy:'Торты и десерты ручной работы, созданные специально для вашего события.',cta:'ВЫБРАТЬ ДЕСЕРТ',nav:'КАТАЛОГ   О НАС   ОТЗЫВЫ'},
+ {id:'fanfan',name:'FAN-FAN',subtitle:'Цветочная студия',type:'Сайт для бренда',category:'flowers',tags:['Каталог','Брендинг'],description:'Воздушный визуальный стиль, крупная флористическая графика и быстрый путь к оформлению заказа.',className:'flowers',brand:'FAN-FAN',heading:'Цветы, которые говорят за вас.',copy:'Авторские букеты для маленьких и больших поводов.',cta:'ВЫБРАТЬ БУКЕТ',nav:'БУКЕТЫ   КОМПОЗИЦИИ   ДОСТАВКА'},
+ {id:'shuffle',name:'Shuffle English',subtitle:'Платформа изучения английского',type:'Веб-приложение',category:'education',tags:['Обучение','Прогресс'],description:'Самостоятельное обучение через короткие уроки, игровые механики и сценарии реального общения.',className:'shuffle',brand:'Shuffle',heading:'English, one step at a time.',copy:'Небольшие ежедневные шаги. Практика, которая превращается в привычку.',cta:'НАЧАТЬ УЧИТЬСЯ',nav:'КУРСЫ   СЛОВАРЬ   AI CHAT'},
+ {id:'beauty',name:'Beauty Atelier',subtitle:'Салон красоты',type:'Сайт услуг',category:'beauty',tags:['Услуги','Запись'],description:'Понятный выбор услуг, мастера, примеры работ и удобная запись с мобильного устройства.',className:'beauty',brand:'ATELIER',heading:'Твоя красота — твои правила.',copy:'Брови, ресницы, ногти и волосы — внимательный подход к деталям.',cta:'ЗАПИСАТЬСЯ',nav:'УСЛУГИ   МАСТЕРА   ПРАЙС'},
+ {id:'cloudquake',name:'cloudquake',subtitle:'Концепт приложения VPN',type:'UI приложения',category:'app',tags:['UI/UX','Desktop'],description:'Тёмный премиальный интерфейс приложения с синими акцентами, продуманной структурой и состояниями.',className:'cloudquake',brand:'cloudquake',heading:'Your internet. Your space.',copy:'Чистый интерфейс. Приватность в фокусе. Управление в один клик.',cta:'EXPLORE APP',nav:'OVERVIEW   FEATURES   SECURITY'},
+ {id:'studio',name:'Studio / Digital',subtitle:'Портфолио digital-студии',type:'Лендинг',category:'studio',tags:['Лендинг','Motion'],description:'Контрастная композиция, большие заголовки, блок услуг и акцент на характере цифровой команды.',className:'studio',brand:'STUDIO/01',heading:'Digital, made thoughtful.',copy:'Мы превращаем сложные идеи в понятные цифровые продукты.',cta:'СМОТРЕТЬ РАБОТЫ',nav:'WORK   STUDIO   CONTACT'}
+];
+
+/* =========================================================
+   Состояние приложения
+   ========================================================= */
+const desktop=document.getElementById('desktop'),dock=document.getElementById('dock');
+let z=20,openCount=0,currentProject=null,videoEntries=[],resumeObjectUrl=null;
+const siteLinks={};try{Object.assign(siteLinks,JSON.parse(localStorage.getItem('portfolioSiteLinks')||'{}'))}catch{}
+
+/* Настройки внешнего вида — реально влияют на интерфейс */
+const prefs={darkMode:false,wallpaper:0,brightness:100,reduceMotion:false,dockMagnify:true};
+try{Object.assign(prefs,JSON.parse(localStorage.getItem('portfolioPrefs')||'{}'))}catch{}
+function savePrefs(){try{localStorage.setItem('portfolioPrefs',JSON.stringify(prefs))}catch{}}
+
+/* =========================================================
+   Утилиты
+   ========================================================= */
+function iconSvg(id){return SVG[id]||SVG.finder}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.classList.remove('show'),2600)}
+function activeWindow(){return [...document.querySelectorAll('.window:not(.is-hidden)')].sort((a,b)=>(+b.style.zIndex||0)-(+a.style.zIndex||0))[0]}
+function focusWindow(win){z++;win.style.zIndex=z;document.querySelectorAll('.dock-icon').forEach(i=>i.classList.toggle('active',i.dataset.app===win.dataset.app))}
+
+/* =========================================================
+   Применение настроек к интерфейсу
+   ========================================================= */
+const WALLPAPERS=[
+  'linear-gradient(125deg,#f9fbff 0%,#e9f0fa 37%,#edf6f4 72%,#f8eff5 100%)',
+  'linear-gradient(125deg,#fff9f0 0%,#f4e7df 36%,#e3f0f2 71%,#f3e8f7 100%)',
+  'linear-gradient(125deg,#eef4ff 0%,#e7ecfa 40%,#f0e9f6 75%,#f6eef2 100%)'
+];
+function applyPrefs(){
+  document.body.classList.toggle('dark',!!prefs.darkMode);
+  const wp=document.querySelector('.wallpaper');
+  if(!prefs.darkMode){wp.style.background=WALLPAPERS[prefs.wallpaper%WALLPAPERS.length]||WALLPAPERS[0]}
+  else{wp.style.background=''}
+  wp.style.opacity=(prefs.brightness/100).toString();
+  document.body.classList.toggle('reduce-motion',!!prefs.reduceMotion);
+}
+applyPrefs();
+
+/* =========================================================
+   Dock
+   ========================================================= */
+function makeDock(){
+  dock.innerHTML='';
+  dockApps.forEach(id=>{
+    if(id==='trash'){const d=document.createElement('div');d.className='dock-divider';dock.appendChild(d)}
+    const b=document.createElement('button');
+    b.className='dock-icon';b.dataset.app=id;b.title=appNames[id];
+    b.setAttribute('aria-label',appNames[id]);
+    b.innerHTML=iconSvg(id)+`<span class="tooltip">${appNames[id]}</span>`;
+    b.addEventListener('click',()=>dockLaunch(id));
+    dock.appendChild(b);
+  });
+}
+function dockLaunch(id){const ex=document.getElementById('window-'+id);if(ex){ex.classList.remove('is-hidden');focusWindow(ex);return}openApp(id)}
+
+/* =========================================================
+   Окна
+   ========================================================= */
+function windowShell(id,title,html,opts={}){
+  const existing=document.getElementById('window-'+id);
+  if(existing){existing.classList.remove('is-hidden');focusWindow(existing);return existing}
+  const win=document.createElement('section');
+  win.className='window';win.id='window-'+id;
+  win.dataset.app=opts.dockApp||id;win.dataset.title=title;win.style.zIndex=++z;
+  const mobile=innerWidth<=760;
+  let w=opts.width||(mobile?innerWidth-14:Math.min(850,innerWidth-80));
+  let h=opts.height||(mobile?desktop.clientHeight-53:Math.min(650,desktop.clientHeight-55));
+  w=Math.min(w,innerWidth-14);h=Math.min(h,desktop.clientHeight-15);
+  const left=mobile?7:Math.max(12,(innerWidth-w)/2+(openCount%4-1.5)*28);
+  const top=mobile?44:Math.max(8,(desktop.clientHeight-h)/2+(openCount%4-1.5)*19);
+  openCount++;
+  Object.assign(win.style,{width:w+'px',height:h+'px',left:left+'px',top:top+'px'});
+  win.innerHTML=`
+    <div class="window-header">
+      <div class="traffic">
+        <button class="close" aria-label="Закрыть окно"><span>×</span></button>
+        <button class="min" aria-label="Свернуть окно"><span>−</span></button>
+        <button class="zoom" aria-label="Развернуть окно"><span>+</span></button>
+      </div>
+      <div class="window-title-wrap">
+        <span class="title-app-icon">${iconSvg(opts.icon||id)}</span>
+        <div class="window-title">${escapeHtml(title)}</div>
+      </div>
+      <div class="window-actions"><button class="share-action" title="Действие" aria-label="Действие">↗</button></div>
+    </div>
+    <div class="window-body">${html}</div>`;
+  desktop.appendChild(win);
+  focusWindow(win);makeDraggable(win);
+  win.querySelector('.close').addEventListener('click',e=>{e.stopPropagation();closeWindow(win)});
+  win.querySelector('.min').addEventListener('click',e=>{e.stopPropagation();minimizeWindow(win)});
+  win.querySelector('.zoom').addEventListener('click',e=>{e.stopPropagation();toggleMaximize(win)});
+  win.querySelector('.share-action').addEventListener('click',()=>{
+    if(id==='sites')toast('Выберите карточку проекта, чтобы открыть его концепт.');
+    else if(id==='videos')toast('Добавьте видеофайл через кнопку «Добавить видео».');
+    else toast('Этот раздел можно настроить под ваши ссылки.');
+  });
+  win.addEventListener('pointerdown',()=>focusWindow(win));
+  bindWindowContent(win,id);
+  return win;
+}
+function closeWindow(win){
+  if(win.dataset.ownedUrl&&win.dataset.videoUrl)URL.revokeObjectURL(win.dataset.videoUrl);
+  const id=win.dataset.app;win.remove();
+  const remaining=activeWindow();
+  if(remaining)focusWindow(remaining);
+  else document.querySelectorAll('.dock-icon').forEach(i=>i.classList.remove('active'));
+  if(id==='safari'&&currentProject)currentProject=null;
+}
+function minimizeWindow(win){
+  win.classList.add('is-hidden');
+  const remaining=activeWindow();
+  if(remaining)focusWindow(remaining);
+}
+function toggleMaximize(win){
+  if(win.dataset.maximized==='true'){
+    win.style.left=win.dataset.prevLeft;win.style.top=win.dataset.prevTop;
+    win.style.width=win.dataset.prevWidth;win.style.height=win.dataset.prevHeight;
+    win.dataset.maximized='false';win.classList.remove('is-maximized');
+  }else{
+    ['left','top','width','height'].forEach(k=>win.dataset['prev'+k[0].toUpperCase()+k.slice(1)]=win.style[k]);
+    Object.assign(win.style,{left:'6px',top:'6px',width:(desktop.clientWidth-12)+'px',height:(desktop.clientHeight-12)+'px'});
+    win.dataset.maximized='true';win.classList.add('is-maximized');
+  }
+}
+function makeDraggable(win){
+  const head=win.querySelector('.window-header');let drag=false,sx=0,sy=0,l=0,t=0;
+  head.addEventListener('pointerdown',e=>{
+    if(e.target.closest('button')||innerWidth<=760||win.dataset.maximized==='true')return;
+    drag=true;sx=e.clientX;sy=e.clientY;l=win.offsetLeft;t=win.offsetTop;
+    try{head.setPointerCapture(e.pointerId)}catch{};focusWindow(win);
+  });
+  head.addEventListener('pointermove',e=>{
+    if(!drag)return;
+    const x=Math.max(0,Math.min(l+e.clientX-sx,desktop.clientWidth-win.offsetWidth));
+    const y=Math.max(0,Math.min(t+e.clientY-sy,desktop.clientHeight-win.offsetHeight));
+    win.style.left=x+'px';win.style.top=y+'px';
+  });
+  head.addEventListener('pointerup',()=>drag=false);
+  head.addEventListener('pointercancel',()=>drag=false);
+}
+
+/* =========================================================
+   Шаблоны контента
+   ========================================================= */
+function toolbar(breadcrumb,search=true){
+  return `<div class="toolbar"><button class="tool-button" data-nav="back" title="Назад">‹</button><button class="tool-button" data-nav="forward" title="Вперёд">›</button><span style="color:#929aaa">${breadcrumb}</span><span class="spacer"></span>${search?`<label class="search-box"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10.7" cy="10.7" r="6.7"/><path d="m16 16 5 5"/></svg><input data-search placeholder="Поиск" aria-label="Поиск"></label>`:''}</div>`;
+}
+function finderContent(){
+  return `${toolbar('Избранное',true)}
+  <div class="finder-layout">
+    <aside class="finder-sidebar">
+      <div class="side-heading">Избранное</div>
+      <button class="side-button active" data-open="finder">${iconSvg('finder')}Недавние</button>
+      <button class="side-button" data-open="sites">${iconSvg('sites')}Сайты</button>
+      <button class="side-button" data-open="videos">${iconSvg('videos')}Видео</button>
+      <div class="side-heading" style="margin-top:18px">Портфолио</div>
+      <button class="side-button" data-open="about">${iconSvg('about')}О нас</button>
+      <button class="side-button" data-open="contacts">${iconSvg('contacts')}Контакты</button>
+      <button class="side-button" data-open="resume">${iconSvg('resume')}Резюме</button>
+    </aside>
+    <section class="finder-main">
+      <div class="welcome-banner">
+        <div class="eyebrow">Наше цифровое пространство</div>
+        <h2>Добро пожаловать<br>в наше портфолио.</h2>
+        <p>Сайты, интерфейсы и видео — откройте любой раздел, как приложение на рабочем столе.</p>
+      </div>
+      <div class="section-title">Быстрый доступ</div>
+      <div class="quick-grid">
+        <button class="quick-card" data-open="sites"><span class="quick-icon" style="background:#fff1c7;color:#d58d0b">${iconSvg('sites')}</span><strong>Сайты</strong><span>Концепты веб-проектов</span></button>
+        <button class="quick-card" data-open="videos"><span class="quick-icon" style="background:#f3e1fc;color:#9155cf">${iconSvg('videos')}</span><strong>Видео</strong><span>Демо и ролики проектов</span></button>
+        <button class="quick-card" data-open="about"><span class="quick-icon" style="background:#e4edfc;color:#6685bf">${iconSvg('about')}</span><strong>О нас</strong><span>Подход и навыки</span></button>
+      </div>
+    </section>
+  </div>`;
+}
+function siteCard(p){
+  const screenClass=p.id==='noir'?'noir':p.id==='amtort'?'cake':p.id==='fanfan'?'flowers':p.id==='shuffle'?'shuffle':p.id==='beauty'?'beauty':p.id==='cloudquake'?'cloud':'project';
+  return `<article class="project-card" data-project="${p.id}" tabindex="0" role="button" aria-label="Открыть ${escapeHtml(p.name)}">
+    <div class="project-screen"><div class="screen-browser"><div class="browser-top"><i></i><i></i><i></i></div>
+      <div class="site-screen screen-${screenClass}">
+        <div class="site-brand">${escapeHtml(p.brand)}</div>
+        <div class="site-nav">${escapeHtml(p.nav)}</div>
+        <div class="site-hero">${escapeHtml(p.heading)}</div>
+        <div class="site-sub">${escapeHtml(p.copy)}</div>
+        <span class="site-cta">${escapeHtml(p.cta)}</span>
+        <div class="site-shape"></div>
+      </div>
+    </div></div>
+    <div class="project-meta">
+      <div class="project-name-row"><strong>${escapeHtml(p.name)}</strong><span class="project-type">${escapeHtml(p.type)}</span></div>
+      <p class="project-desc">${escapeHtml(p.description)}</p>
+      <div class="project-bottom">
+        <div class="tag-list">${p.tags.map(t=>`<span class="tag">${escapeHtml(t)}</span>`).join('')}</div>
+        <button class="arrow-link" data-project="${p.id}">Смотреть ↗</button>
+      </div>
+    </div>
+  </article>`;
+}
+function sitesContent(){
+  return `${toolbar('Портфолио / Сайты',true)}<div class="page">
+    <div class="page-heading">
+      <div><div class="eyebrow">Избранные работы</div><h1>Сайты и интерфейсы</h1>
+      <p class="page-intro">Каждая карточка открывает отдельный интерактивный концепт. Добавьте реальные ссылки, когда проекты будут опубликованы.</p></div>
+      <span class="tiny-count">${projects.length} проекта</span>
+    </div>
+    <div class="project-grid" id="projectGrid">${projects.map(siteCard).join('')}</div>
+  </div>`;
+}
+function videoPlaceholder(id,title,desc){
+  return `<article class="video-card">
+    <div class="video-poster" data-poster="${id}">
+      <div class="poster-window"><div class="poster-bar"></div><div class="poster-line"></div><div class="poster-line" style="width:45%"></div><div class="poster-tiles"><i></i><i></i><i></i></div></div>
+      <span class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+      <span class="video-duration">DEMO SLOT</span>
+    </div>
+    <div class="video-info"><strong>${escapeHtml(title)}</strong><p>${escapeHtml(desc)}</p>
+      <div class="video-actions"><button class="small-button" data-addvideo="${id}">Добавить ролик</button><button class="small-button neutral" data-info="${id}">Подробнее</button></div>
+    </div>
+  </article>`;
+}
+function videoCard(v){
+  return `<article class="video-card">
+    <div class="video-poster" style="background:linear-gradient(135deg,#d9e6fb,#f0dff8)">
+      <div class="poster-window"><div class="poster-bar"></div><div class="poster-line"></div><div class="poster-line" style="width:43%"></div><div class="poster-tiles"><i></i><i></i><i></i></div></div>
+      <span class="play-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+      <span class="video-duration">${escapeHtml(v.duration||'LOCAL')}</span>
+    </div>
+    <div class="video-info"><strong>${escapeHtml(v.name)}</strong><p>Локальный файл · ${escapeHtml(v.size||'видео')}</p>
+      <div class="video-actions"><button class="small-button" data-playvideo="${v.id}">Воспроизвести</button><button class="small-button neutral" data-removevideo="${v.id}">Убрать</button></div>
+    </div>
+  </article>`;
+}
+function videoContent(){
+  return `${toolbar('Портфолио / Видео',true)}<div class="page">
+    <div class="page-heading">
+      <div><div class="eyebrow">Showreel & motion</div><h1>Видео и демонстрации</h1>
+      <p class="page-intro">Отдельная видеотека для скринкастов, анимации интерфейсов и презентаций проектов. Добавьте собственные MP4, MOV или WebM — они откроются во встроенном плеере.</p></div>
+      <button class="pill-button" id="addVideoMain">+ Добавить видео</button>
+    </div>
+    <div class="video-grid" id="videoGrid">
+      ${videoEntries.map(videoCard).join('')}
+      ${videoPlaceholder('showreel','Showreel / обзор работ','Короткое видео-знакомство с портфолио. Добавьте готовый ролик.')}
+      ${videoPlaceholder('motion','Motion / анимация интерфейса','Демонстрация переходов, микровзаимодействий и деталей UI.')}
+      ${videoPlaceholder('process','Процесс работы','Запись процесса создания сайта от идеи до результата.')}
+      <button class="upload-card" id="uploadVideoCard">
+        <span class="upload-symbol"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 16V4m-5 5 5-5 5 5M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/></svg></span>
+        <strong>Добавить своё видео</strong><p>Выберите видеофайл на компьютере. Файл не отправляется на сервер.</p>
+        <span class="small-button">Выбрать файл</span>
+      </button>
+    </div>
+    <p style="font-size:10px;color:#929aa7;line-height:1.55;margin:16px 1px 0">Загруженные видео доступны в этом открытом окне. Чтобы они появились на опубликованном сайте у других людей, видео нужно отдельно загрузить на видеохостинг или сервер.</p>
+  </div>`;
+}
+function aboutContent(){
+  return `${toolbar('Портфолио / О нас',false)}<div class="page">
+    <div class="about-layout">
+      <div class="profile-art"><div class="profile-orb"></div></div>
+      <div>
+        <div class="eyebrow">О нас</div>
+        <h1>Мы создаём цифровые продукты с характером.</h1>
+        <p class="page-intro">Мы — студия веб-разработки и UI-дизайна. Нам важно, чтобы сайт выглядел выразительно, работал предсказуемо и одинаково хорошо ощущался на большом экране и телефоне.</p>
+        <div class="tag-list" style="margin-top:13px"><span class="tag">Дизайн интерфейсов</span><span class="tag">HTML / CSS / JS</span><span class="tag">Адаптивная вёрстка</span></div>
+        <div class="section-title">Наш подход</div>
+        <p style="font-size:11px;line-height:1.65;color:#748091;margin:0">Мы исследуем задачу и аудиторию, собираем визуальную систему, проектируем ключевые сценарии и доводим интерфейс до аккуратного состояния на разных устройствах. Любим сильную типографику, ясную иерархию и анимации, которые помогают взаимодействию.</p>
+      </div>
+    </div>
+    <div class="section-title">Инструменты и навыки команды</div>
+    <div class="skill-list">
+      <div class="skill-item"><span>HTML / CSS</span><div class="meter"><i style="width:92%"></i></div><b>92%</b></div>
+      <div class="skill-item"><span>JavaScript</span><div class="meter"><i style="width:78%"></i></div><b>78%</b></div>
+      <div class="skill-item"><span>UI / UX</span><div class="meter"><i style="width:83%"></i></div><b>83%</b></div>
+      <div class="skill-item"><span>Адаптивность</span><div class="meter"><i style="width:90%"></i></div><b>90%</b></div>
+    </div>
+    <p style="font-size:9px;color:#9aa2af;margin-top:12px">Уровни навыков — редактируемый пример. Укажите реальные компетенции вашей команды.</p>
+  </div>`;
+}
+function contactsContent(){
+  return `${toolbar('Портфолио / Контакты',false)}<div class="page">
+    <div class="eyebrow">На связи</div>
+    <h1>Есть идея? Давайте обсудим.</h1>
+    <p class="page-intro" style="margin-bottom:20px">Мы открыты к разработке сайтов, редизайну и созданию интерактивных интерфейсов. Замените примерные контакты ниже на свои.</p>
+    <div class="contact-grid">
+      <div class="contact-tile"><span class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg></span><div><small>EMAIL</small><strong>your@email.com</strong></div></div>
+      <div class="contact-tile"><span class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 3 10.5 13.5M21 3l-6.7 18-3.8-7.5L3 9.7z"/></svg></span><div><small>TELEGRAM</small><strong>@username</strong></div></div>
+      <div class="contact-tile"><span class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 19c-4.5 1.5-4.5-2.5-6.3-3M15 22v-3.9a3.4 3.4 0 0 0-.9-2.6c3-.3 6.1-1.5 6.1-6.7a5.2 5.2 0 0 0-1.4-3.6 4.8 4.8 0 0 0-.1-3.6s-1.2-.4-3.8 1.4a13 13 0 0 0-7 0C5.3 1.2 4.1 1.6 4.1 1.6A4.8 4.8 0 0 0 4 5.2a5.2 5.2 0 0 0-1.4 3.6c0 5.2 3.1 6.4 6.1 6.7a3.4 3.4 0 0 0-.9 2.6V22"/></svg></span><div><small>GITHUB</small><strong>github.com/username</strong></div></div>
+      <div class="contact-tile"><span class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01" stroke-width="3"/></svg></span><div><small>SOCIAL</small><strong>Добавьте свою соцсеть</strong></div></div>
+    </div>
+    <div style="margin-top:20px;padding:16px;border-radius:11px;background:#e9f2ff;border:1px solid #d5e7ff">
+      <strong style="font-size:11px;color:#315477">Предпочитаете начать с задачи?</strong>
+      <p style="font-size:10px;line-height:1.5;color:#6c7e96;margin:6px 0 11px">Подготовьте короткое описание проекта, желаемый результат и сроки — этого достаточно для первого обсуждения.</p>
+      <button class="pill-button" id="copyContact">Скопировать шаблон сообщения</button>
+    </div>
+  </div>`;
+}
+function resumeContent(){
+  return `${toolbar('Портфолио / Резюме',false)}<div class="page">
+    <div class="page-heading">
+      <div><div class="eyebrow">Curriculum vitae</div><h1>Резюме студии</h1>
+      <p class="page-intro">Компактная версия навыков и направлений работы команды. Прикрепите собственный PDF для скачивания или просмотра.</p></div>
+      <button class="pill-button" id="uploadResume">Добавить PDF</button>
+    </div>
+    <div class="resume-sheet" id="resumeSheet">
+      <h2>Название студии</h2>
+      <div class="resume-sub">Веб-разработка · UI/UX-дизайн · Контакты: your@email.com</div>
+      <div class="resume-rule"></div>
+      <h3>Профиль</h3><p>Мы создаём адаптивные сайты и интерфейсы, уделяя внимание визуальной системе, доступности и деталям пользовательского опыта.</p>
+      <h3>Ключевые навыки</h3><ul><li>HTML, CSS, JavaScript и адаптивная вёрстка</li><li>Проектирование пользовательских сценариев и UI/UX</li><li>Интерактивные элементы, анимация и полировка интерфейсов</li></ul>
+      <h3>Избранные проекты</h3><ul><li>NOIR — концепт интернет-магазина одежды</li><li>АМ ТОРТ — концепт сайта кондитерской</li><li>FAN-FAN — концепт сайта цветочной студии</li><li>Shuffle — платформа для изучения английского</li></ul>
+      <h3>Опыт и образование</h3><p>Добавьте реальный опыт, образование, даты и ссылки на подтверждающие работы перед публикацией.</p>
+      <div class="resume-rule"></div>
+      <p style="font-size:9px;color:#9aa2af">Демонстрационный шаблон — не заменяет фактическое резюме студии.</p>
+    </div>
+    <input type="file" class="hidden-input" id="resumeLocalInput" accept="application/pdf,.pdf">
+  </div>`;
+}
+function settingsContent(){
+  const darkCls=prefs.darkMode?'on':'';
+  const motionCls=prefs.reduceMotion?'on':'';
+  const magnifyCls=prefs.dockMagnify?'on':'';
+  const wpNames=['Светлые','Тёплые','Прохладные'];
+  return `${toolbar('Настройки',false)}
+  <div class="settings-layout">
+    <aside class="settings-nav">
+      <div class="side-heading">Разделы</div>
+      <button class="side-button active" data-settings-tab="appearance">${iconSvg('settings')}Оформление</button>
+      <button class="side-button" data-settings-tab="behavior">Поведение</button>
+      <button class="side-button" data-settings-tab="about">О проекте</button>
+    </aside>
+    <section class="settings-content" id="settingsContent">
+      <div data-settings-panel="appearance">
+        <div class="eyebrow">Внешний вид</div>
+        <h1 style="font-size:20px;margin-bottom:6px">Оформление рабочего стола</h1>
+        <p class="page-intro" style="margin-bottom:16px">Настройки ниже действительно меняют внешний вид портфолио в этом браузере. Они не влияют на операционную систему.</p>
+        <div class="setting-group-title">Тема</div>
+        <div class="setting-row">
+          <div class="setting-row-info"><strong>Тёмная тема</strong><span>Тёмные окна, панели и фон рабочего стола.</span></div>
+          <div class="setting-control"><button class="switch ${darkCls}" data-pref="darkMode" aria-label="Тёмная тема"></button></div>
+        </div>
+        <div class="setting-group-title">Обои</div>
+        <div class="setting-row">
+          <div class="setting-row-info"><strong>Набор обоев</strong><span>Переключение между цветовыми схемами фона.</span></div>
+          <div class="setting-control">
+            <div class="seg" data-pref-seg="wallpaper">
+              ${wpNames.map((n,i)=>`<button class="${prefs.wallpaper===i?'active':''}" data-wallpaper="${i}">${n}</button>`).join('')}
+            </div>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-row-info"><strong>Яркость фона</strong><span>Приглушает фон, чтобы акцент был на окнах.</span></div>
+          <div class="setting-control"><input class="range" type="range" min="75" max="100" value="${prefs.brightness}" data-pref-range="brightness" aria-label="Яркость фона"></div>
+        </div>
+        <div class="setting-group-title">Поведение</div>
+        <div class="setting-row">
+          <div class="setting-row-info"><strong>Увеличение иконок в Dock</strong><span>Иконки реагируют на курсор и увеличиваются.</span></div>
+          <div class="setting-control"><button class="switch ${magnifyCls}" data-pref="dockMagnify" aria-label="Увеличение иконок"></button></div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-row-info"><strong>Меньше анимаций</strong><span>Отключает большинство переходов и анимаций.</span></div>
+          <div class="setting-control"><button class="switch ${motionCls}" data-pref="reduceMotion" aria-label="Меньше анимаций"></button></div>
+        </div>
+      </div>
+      <div data-settings-panel="behavior" hidden>
+        <div class="eyebrow">Поведение</div>
+        <h1 style="font-size:20px;margin-bottom:6px">Окна и рабочий стол</h1>
+        <p class="page-intro" style="margin-bottom:16px">Этот раздел объясняет, как устроено пространство портфолио, и позволяет вернуться к базовому состоянию.</p>
+        <div class="setting-row">
+          <div class="setting-row-info"><strong>Открыть Finder</strong><span>Вернуться к обзору портфолио.</span></div>
+          <div class="setting-control"><button class="small-button" data-open="finder">Открыть</button></div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-row-info"><strong>Сбросить внешний вид</strong><span>Вернуть светлую тему, стандартные обои и 100% яркости.</span></div>
+          <div class="setting-control"><button class="small-button neutral" id="resetPrefs">Сбросить</button></div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-row-info"><strong>Закрыть все окна</strong><span>Свернуть рабочее пространство до чистого стола.</span></div>
+          <div class="setting-control"><button class="small-button neutral" id="closeAllWindows">Закрыть все</button></div>
+        </div>
+      </div>
+      <div data-settings-panel="about" hidden>
+        <div class="eyebrow">О проекте</div>
+        <h1 style="font-size:20px;margin-bottom:6px">Независимый концепт</h1>
+        <p class="page-intro" style="margin-bottom:14px">Это независимый концепт-проект. Не связан с Apple Inc. и не одобрен ею. Все названия приложений внутри портфолио — условные.</p>
+        <p style="font-size:11px;line-height:1.65;color:#748091;margin:0 0 12px">Портфолио использует идею рабочего стола как метафору навигации: окна, Dock, менюбар и панель настроек. Это удобная и знакомая среда, которая помогает показать проекты в интерактивном виде.</p>
+        <p style="font-size:11px;line-height:1.65;color:#748091;margin:0">Все данные о проектах и контактах — демонстрационные и легко заменяются на реальные.</p>
+      </div>
+    </section>
+  </div>`;
+}
+function trashContent(){
+  return `${toolbar('Корзина',false)}<div class="page" style="text-align:center;padding-top:70px">
+    <div style="margin:0 auto 15px;width:70px;height:75px">${iconSvg('trash')}</div>
+    <h1 style="font-size:21px">Корзина пуста</h1>
+    <p class="page-intro" style="margin:0 auto">Ничего здесь нет. Окна портфолио можно закрывать кнопкой слева в заголовке.</p>
+  </div>`;
+}
+function safariContent(){
+  return `${toolbar('Browser / Веб-просмотр',false)}<div class="page">
+    <div class="eyebrow">Веб-просмотр</div>
+    <h1>Открыть опубликованный сайт</h1>
+    <p class="page-intro">Вставьте адрес сайта, чтобы открыть его в новой вкладке. Пустые ссылки не подставляются автоматически.</p>
+    <form id="urlForm" style="display:flex;gap:8px;margin-top:18px">
+      <input id="urlInput" type="url" placeholder="https://example.com" required style="flex:1;min-width:0;border:1px solid #dce2eb;background:white;border-radius:8px;padding:10px 12px;font-size:11px">
+      <button class="pill-button">Открыть ↗</button>
+    </form>
+    <div class="section-title">Концепты из портфолио</div>
+    <div class="quick-grid">${projects.slice(0,3).map(p=>`<button class="quick-card" data-project="${p.id}"><span class="quick-icon" style="background:#e5edfb;color:#347fe0">↗</span><strong>${escapeHtml(p.name)}</strong><span>Открыть интерактивный концепт</span></button>`).join('')}</div>
+  </div>`;
+}
+function projectPreviewContent(p){
+  return `${toolbar('Концепт / '+escapeHtml(p.name),false)}
+  <div class="preview-shell">
+    <div class="preview-bar">
+      <div class="preview-dots"><i></i><i></i><i></i></div>
+      <div class="preview-address">Локальный интерактивный концепт · ${escapeHtml(p.name)}</div>
+      <button class="preview-visit" data-project-url="${p.id}">Открыть сайт ↗</button>
+    </div>
+    <div class="mock-site ${p.className}">
+      <nav><span class="mock-brand">${escapeHtml(p.brand)}</span><span class="navlinks">${escapeHtml(p.nav)}</span></nav>
+      <div class="mock-hero">
+        <div class="eyebrow" style="color:currentColor;opacity:.65">CONCEPT / DESIGN</div>
+        <h2>${escapeHtml(p.heading)}</h2><p>${escapeHtml(p.copy)}</p>
+        <button class="mock-button" data-mock-action="${p.id}">${escapeHtml(p.cta)}</button>
+      </div>
+      <div class="mock-visual"></div>
+      <div class="mock-info-row"><span>${escapeHtml(p.name)} — DIGITAL CONCEPT</span><span>DESIGN · DEVELOPMENT</span></div>
+    </div>
+    <div style="padding:18px 22px 24px;background:#fff;border-top:1px solid #e8eaf0">
+      <div class="eyebrow">О проекте</div>
+      <p style="font-size:11px;line-height:1.65;color:#7b8594;max-width:620px;margin:0">${escapeHtml(p.description)} Это демонстрационная визуальная концепция, встроенная в HTML. Для перехода к реальному опубликованному проекту укажите ссылку.</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:13px">
+        <button class="pill-button" data-set-url="${p.id}">Добавить ссылку</button>
+        <button class="pill-button light" data-open="contacts">Обсудить похожий проект</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* =========================================================
+   Открытие приложений
+   ========================================================= */
+function openApp(id){
+  if(id==='project')return;
+  const templates={
+    finder:['Files',finderContent(),{width:850,height:565}],
+    sites:['Сайты',sitesContent(),{width:855,height:625}],
+    videos:['Видео',videoContent(),{width:850,height:620}],
+    about:['О нас',aboutContent(),{width:680,height:570}],
+    contacts:['Контакты',contactsContent(),{width:650,height:500}],
+    resume:['Резюме',resumeContent(),{width:690,height:630}],
+    settings:['Настройки',settingsContent(),{width:720,height:560}],
+    trash:['Корзина',trashContent(),{width:480,height:370}],
+    safari:['Browser',safariContent(),{width:680,height:500}]
+  };
+  const t=templates[id];if(!t)return;
+  const win=windowShell(id,t[0],t[1],{...t[2],icon:id});
+  if(id==='sites')applySiteSearch(win);
+  if(id==='videos')refreshVideoWindow(win);
+  return win;
+}
+
+/* =========================================================
+   Привязка событий внутри окна
+   ========================================================= */
+function bindWindowContent(win,id){
+  win.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();openApp(b.dataset.open)}));
+  win.querySelectorAll('[data-project]').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();openProject(b.dataset.project)}));
+  win.querySelectorAll('[data-nav]').forEach(b=>b.addEventListener('click',()=>{
+    if(b.dataset.nav==='back')toast('Это первый уровень раздела.');
+    else toast('Нет следующих страниц в этом разделе.');
+  }));
+  const search=win.querySelector('[data-search]');
+  if(search){
+    search.addEventListener('input',()=>{
+      const term=search.value.toLowerCase();
+      win.querySelectorAll('.project-card,.video-card,.quick-card').forEach(card=>{
+        card.style.display=card.textContent.toLowerCase().includes(term)?'':'none';
+      });
+    });
+  }
+  win.querySelectorAll('[data-project-url]').forEach(b=>b.onclick=()=>visitProject(b.dataset.projectUrl));
+  win.querySelectorAll('[data-set-url]').forEach(b=>b.onclick=()=>askForLink(b.dataset.setUrl));
+  win.querySelectorAll('[data-mock-action]').forEach(b=>b.onclick=()=>toast('Это демонстрация дизайна. Подключите реальное действие проекта при публикации.'));
+  win.querySelectorAll('[data-addvideo]').forEach(b=>b.onclick=()=>chooseVideo(b.dataset.addvideo));
+  win.querySelectorAll('[data-info]').forEach(b=>b.onclick=()=>toast('Выберите «Добавить ролик», чтобы загрузить своё видео в этот слот.'));
+  win.querySelectorAll('[data-playvideo]').forEach(b=>b.onclick=()=>playVideo(b.dataset.playvideo));
+  win.querySelectorAll('[data-removevideo]').forEach(b=>b.onclick=()=>removeVideo(b.dataset.removevideo));
+  const addMain=win.querySelector('#addVideoMain'),addCard=win.querySelector('#uploadVideoCard');
+  if(addMain)addMain.onclick=()=>chooseVideo('custom');
+  if(addCard)addCard.onclick=()=>chooseVideo('custom');
+  const copy=win.querySelector('#copyContact');
+  if(copy)copy.onclick=()=>copyText('Здравствуйте! Хотим обсудить создание сайта. Задача: … Цель проекта: … Желаемые сроки: …');
+  const uploadResume=win.querySelector('#uploadResume');
+  if(uploadResume)uploadResume.onclick=()=>document.getElementById('resumeFileInput').click();
+  const localResume=win.querySelector('#resumeLocalInput');
+  if(localResume)localResume.onchange=()=>{const f=localResume.files[0];if(f)showResumeFile(f)};
+  const urlForm=win.querySelector('#urlForm');
+  if(urlForm)urlForm.onsubmit=e=>{
+    e.preventDefault();
+    const value=win.querySelector('#urlInput').value;
+    try{const u=new URL(value);if(['http:','https:'].includes(u.protocol))window.open(u.href,'_blank','noopener')}
+    catch{toast('Укажите корректный адрес сайта.')}
+  };
+  if(id==='settings')bindSettings(win);
+}
+function applySiteSearch(win){const input=win.querySelector('[data-search]');if(input)input.placeholder='Найти проект'}
+
+/* =========================================================
+   Окно настроек — логика
+   ========================================================= */
+function bindSettings(win){
+  const nav=win.querySelector('.settings-nav');
+  const content=win.querySelector('#settingsContent');
+  if(nav){
+    nav.querySelectorAll('[data-settings-tab]').forEach(btn=>{
+      btn.onclick=()=>{
+        nav.querySelectorAll('[data-settings-tab]').forEach(b=>b.classList.toggle('active',b===btn));
+        content.querySelectorAll('[data-settings-panel]').forEach(p=>{
+          p.hidden=p.dataset.settingsPanel!==btn.dataset.settingsTab;
+        });
+      };
+    });
+  }
+  win.querySelectorAll('[data-pref]').forEach(btn=>{
+    btn.onclick=()=>{
+      const key=btn.dataset.pref;
+      prefs[key]=!prefs[key];
+      btn.classList.toggle('on',!!prefs[key]);
+      savePrefs();applyPrefs();applyDockMagnify();
+      toast('Настройка применена.');
+    };
+  });
+  win.querySelectorAll('[data-wallpaper]').forEach(btn=>{
+    btn.onclick=()=>{
+      prefs.wallpaper=+btn.dataset.wallpaper;
+      win.querySelectorAll('[data-wallpaper]').forEach(b=>b.classList.toggle('active',b===btn));
+      savePrefs();applyPrefs();
+      toast('Обои обновлены.');
+    };
+  });
+  const range=win.querySelector('[data-pref-range="brightness"]');
+  if(range){
+    range.oninput=()=>{
+      prefs.brightness=+range.value;
+      savePrefs();applyPrefs();
+    };
+  }
+  const reset=win.querySelector('#resetPrefs');
+  if(reset)reset.onclick=()=>{
+    prefs.darkMode=false;prefs.wallpaper=0;prefs.brightness=100;prefs.reduceMotion=false;prefs.dockMagnify=true;
+    savePrefs();applyPrefs();applyDockMagnify();
+    win.querySelectorAll('[data-pref]').forEach(b=>{const k=b.dataset.pref;b.classList.toggle('on',!!prefs[k])});
+    win.querySelectorAll('[data-wallpaper]').forEach(b=>b.classList.toggle('active',+b.dataset.wallpaper===0));
+    if(range)range.value=100;
+    toast('Внешний вид сброшен.');
+  };
+  const closeAll=win.querySelector('#closeAllWindows');
+  if(closeAll)closeAll.onclick=()=>{
+    document.querySelectorAll('.window').forEach(w=>{
+      if(w.id==='window-settings')return;
+      closeWindow(w);
+    });
+    toast('Все остальные окна закрыты.');
+  };
+}
+
+/* =========================================================
+   Проекты и ссылки
+   ========================================================= */
+function openProject(id){
+  const p=projects.find(x=>x.id===id);if(!p)return;
+  currentProject=id;
+  windowShell('project-'+id,p.name,projectPreviewContent(p),{dockApp:'safari',icon:'safari',width:780,height:590});
+  const win=document.getElementById('window-project-'+id);win.dataset.project=id;
+}
+function saveLink(id,url){siteLinks[id]=url;try{localStorage.setItem('portfolioSiteLinks',JSON.stringify(siteLinks))}catch{}toast('Ссылка сохранена для этого браузера.')}
+function askForLink(id){
+  const p=projects.find(x=>x.id===id);
+  const current=siteLinks[id]||'';
+  const url=prompt('Укажите полный адрес опубликованного сайта для проекта «'+p.name+'» (https://...)',current);
+  if(url===null)return;
+  const trimmed=url.trim();
+  if(!trimmed){delete siteLinks[id];try{localStorage.setItem('portfolioSiteLinks',JSON.stringify(siteLinks))}catch{}toast('Ссылка удалена.');return}
+  let parsed;try{parsed=new URL(trimmed)}catch{toast('Проверьте адрес сайта и попробуйте ещё раз.');return}
+  if(!['http:','https:'].includes(parsed.protocol)){toast('Нужна ссылка, начинающаяся с https:// или http://');return}
+  saveLink(id,parsed.href);
+}
+function visitProject(id){
+  if(siteLinks[id])window.open(siteLinks[id],'_blank','noopener');
+  else{askForLink(id);if(siteLinks[id])toast('Нажмите «Открыть сайт» ещё раз, чтобы перейти по ссылке.')}
+}
+
+/* =========================================================
+   Буфер обмена
+   ========================================================= */
+function copyText(text){
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(()=>toast('Шаблон сообщения скопирован.')).catch(()=>fallbackCopy(text));
+  }else fallbackCopy(text);
+}
+function fallbackCopy(text){
+  const a=document.createElement('textarea');a.value=text;document.body.appendChild(a);a.select();
+  try{document.execCommand('copy');toast('Шаблон сообщения скопирован.')}catch{toast(text)}
+  a.remove();
+}
+
+/* =========================================================
+   Видео
+   ========================================================= */
+function chooseVideo(slot){const input=document.getElementById('videoFileInput');input.dataset.slot=slot;input.value='';input.click()}
+document.getElementById('videoFileInput').addEventListener('change',e=>{
+  const files=[...e.target.files||[]];
+  files.forEach(f=>{
+    if(!f.type.startsWith('video/'))return;
+    const url=URL.createObjectURL(f);
+    videoEntries.push({id:'v'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),name:f.name.replace(/\.[^.]+$/,''),file:f,url,size:formatSize(f.size),duration:'LOCAL'});
+  });
+  const w=document.getElementById('window-videos');if(w)refreshVideoWindow(w);
+  if(files.length)toast(files.length===1?'Видео добавлено в локальную видеотеку.':'Видео добавлены в локальную видеотеку.');
+});
+function formatSize(n){if(n<1024*1024)return Math.round(n/1024)+' KB';return (n/1024/1024).toFixed(1)+' MB'}
+function refreshVideoWindow(win){
+  const body=win.querySelector('.window-body');const old=body.scrollTop;
+  body.innerHTML=videoContent();bindWindowContent(win,'videos');body.scrollTop=old;
+}
+function playVideo(id){
+  const v=videoEntries.find(x=>x.id===id);if(!v)return;
+  const html=`<div class="toolbar"><span>Видео / ${escapeHtml(v.name)}</span><span class="spacer"></span><span>${escapeHtml(v.size)}</span></div>
+  <div style="height:calc(100% - 42px);display:flex;align-items:center;justify-content:center;background:#151924;padding:15px">
+    <video src="${v.url}" controls autoplay playsinline style="max-width:100%;max-height:100%;width:100%;border-radius:8px;background:#000"></video>
+  </div>`;
+  const w=windowShell('player-'+v.id,v.name,html,{width:800,height:535,dockApp:'videos',icon:'videos'});
+  w.dataset.videoUrl=v.url;w.dataset.ownedUrl='1';
+}
+function removeVideo(id){
+  const i=videoEntries.findIndex(x=>x.id===id);if(i<0)return;
+  URL.revokeObjectURL(videoEntries[i].url);videoEntries.splice(i,1);
+  const w=document.getElementById('window-videos');if(w)refreshVideoWindow(w);
+  toast('Видео убрано из текущей сессии.');
+}
+
+/* =========================================================
+   Резюме PDF
+   ========================================================= */
+function showResumeFile(file){
+  if(resumeObjectUrl)URL.revokeObjectURL(resumeObjectUrl);
+  resumeObjectUrl=URL.createObjectURL(file);
+  const old=document.getElementById('window-resume-pdf');if(old)old.remove();
+  const w=windowShell('resume-pdf',file.name,
+    `<div class="toolbar">PDF / ${escapeHtml(file.name)}<span class="spacer"></span><button class="tool-button" id="openPdfNew">Открыть отдельно ↗</button></div>
+     <iframe title="Резюме PDF" src="${resumeObjectUrl}" style="width:100%;height:calc(100% - 42px);border:0;background:#eef1f6"></iframe>`,
+    {width:800,height:650,dockApp:'resume',icon:'resume'});
+  w.dataset.videoUrl=resumeObjectUrl;w.dataset.ownedUrl='1';
+  w.querySelector('#openPdfNew').onclick=()=>window.open(resumeObjectUrl,'_blank','noopener');
+}
+document.getElementById('resumeFileInput').addEventListener('change',e=>{
+  const f=e.target.files[0];
+  if(f&&f.type==='application/pdf')showResumeFile(f);
+  else if(f)toast('Выберите PDF-файл.');
+  e.target.value='';
+});
+
+/* =========================================================
+   Dock magnify
+   ========================================================= */
+function applyDockMagnify(){
+  if(!prefs.dockMagnify)dock.querySelectorAll('.dock-icon').forEach(i=>i.style.transform='');
+}
+dock.addEventListener('mousemove',e=>{
+  if(innerWidth<760||!prefs.dockMagnify)return;
+  dock.querySelectorAll('.dock-icon').forEach(i=>{
+    const r=i.getBoundingClientRect(),d=Math.abs(e.clientX-(r.left+r.width/2));
+    const s=d<105?1+.35*(1-d/105):1;
+    i.style.transform=`translateY(${d<105?-((s-1)*22):0}px) scale(${s})`;
+  });
+});
+dock.addEventListener('mouseleave',()=>dock.querySelectorAll('.dock-icon').forEach(i=>i.style.transform=''));
+
+/* =========================================================
+   Меню и контекст
+   ========================================================= */
+function showContext(x,y){
+  const m=document.getElementById('contextMenu');
+  m.innerHTML=`<button data-cmd="finder">Открыть Files</button><button data-cmd="sites">Открыть папку «Сайты»</button><button data-cmd="videos">Открыть папку «Видео»</button><div class="context-sep"></div><button data-cmd="about">О нас</button><button data-cmd="settings">Настройки рабочего стола</button><div class="context-sep"></div><button data-cmd="refresh">Обновить рабочий стол</button>`;
+  m.style.display='block';
+  m.style.left=Math.min(x,innerWidth-206)+'px';
+  m.style.top=Math.min(y,innerHeight-245)+'px';
+  m.querySelectorAll('[data-cmd]').forEach(b=>b.onclick=()=>{
+    m.style.display='none';
+    if(b.dataset.cmd==='refresh'){toast('Рабочий стол обновлён.');return}
+    openApp(b.dataset.cmd);
+  });
+}
+
+/* =========================================================
+   Пункт управления
+   ========================================================= */
+function openControlPanel(){
+  const p=document.getElementById('controlPanel');
+  const isDark=prefs.darkMode;
+  p.innerHTML=`<h4>Пункт управления</h4>
+    <div class="control-grid">
+      <button class="control-tile ${isDark?'on':''}" data-pref="darkMode"><span>Оформление<br><b>${isDark?'Тёмное':'Светлое'}</b></span></button>
+      <button class="control-tile ${prefs.reduceMotion?'on':''}" data-pref="reduceMotion"><span>Анимации<br><b>${prefs.reduceMotion?'Выкл.':'Вкл.'}</b></span></button>
+      <button class="control-tile ${prefs.dockMagnify?'on':''}" data-pref="dockMagnify"><span>Dock<br><b>${prefs.dockMagnify?'Увеличение':'Стандарт'}</b></span></button>
+      <button class="control-tile" data-open-settings="1"><span>Настройки<br><b>Открыть окно</b></span></button>
+    </div>
+    <div class="brightness">Яркость фона <input type="range" min="75" max="100" value="${prefs.brightness}" id="ctlBrightness"></div>
+    <div class="control-caption">Панель управления портфолио — меняет оформление сайта в этом браузере, а не настройки устройства.</div>`;
+  p.style.display='block';
+  p.querySelectorAll('[data-pref]').forEach(b=>{
+    b.onclick=()=>{
+      const k=b.dataset.pref;prefs[k]=!prefs[k];
+      b.classList.toggle('on',!!prefs[k]);
+      savePrefs();applyPrefs();applyDockMagnify();
+      const status=b.querySelector('b');
+      if(status){
+        if(k==='darkMode')status.textContent=prefs.darkMode?'Тёмное':'Светлое';
+        else if(k==='reduceMotion')status.textContent=prefs.reduceMotion?'Выкл.':'Вкл.';
+        else if(k==='dockMagnify')status.textContent=prefs.dockMagnify?'Увеличение':'Стандарт';
+      }
+      syncSettingsWindow();
+    };
+  });
+  const openSet=p.querySelector('[data-open-settings]');
+  if(openSet)openSet.onclick=()=>{openApp('settings');p.style.display='none'};
+  const br=p.querySelector('#ctlBrightness');
+  if(br)br.oninput=()=>{prefs.brightness=+br.value;savePrefs();applyPrefs()};
+}
+function syncSettingsWindow(){
+  const w=document.getElementById('window-settings');
+  if(!w)return;
+  w.querySelectorAll('[data-pref]').forEach(b=>b.classList.toggle('on',!!prefs[b.dataset.pref]));
+  w.querySelectorAll('[data-wallpaper]').forEach(b=>b.classList.toggle('active',+b.dataset.wallpaper===prefs.wallpaper));
+  const r=w.querySelector('[data-pref-range="brightness"]');
+  if(r)r.value=prefs.brightness;
+}
+document.getElementById('controlToggle').addEventListener('click',e=>{
+  e.stopPropagation();
+  const p=document.getElementById('controlPanel');
+  if(p.style.display==='block'){p.style.display='none';return}
+  openControlPanel();
+});
+
+/* =========================================================
+   Глобальные обработчики
+   ========================================================= */
+makeDock();openApp('finder');
+document.querySelectorAll('[data-open]').forEach(b=>b.addEventListener('click',()=>openApp(b.dataset.open)));
+desktop.addEventListener('contextmenu',e=>{e.preventDefault();showContext(e.clientX,e.clientY)});
+
+document.getElementById('searchToggle').addEventListener('click',()=>{
+  openApp('finder');
+  const w=document.getElementById('window-finder');
+  const input=w&&w.querySelector('[data-search]');
+  if(input){input.focus();input.placeholder='Поиск по портфолио'}
+});
+
+document.addEventListener('click',e=>{
+  if(!e.target.closest('#menuPop')&&!e.target.closest('.menubar button'))document.getElementById('menuPop').style.display='none';
+  if(!e.target.closest('#contextMenu'))document.getElementById('contextMenu').style.display='none';
+  if(!e.target.closest('#controlPanel')&&!e.target.closest('#controlToggle'))document.getElementById('controlPanel').style.display='none';
+});
+
+function updateClock(){
+  const d=new Date();
+  document.getElementById('clock').textContent=
+    d.toLocaleDateString('ru-RU',{weekday:'short',day:'numeric',month:'short'})+' '+
+    d.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
+}
+setInterval(updateClock,1000);updateClock();
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    document.getElementById('menuPop').style.display='none';
+    document.getElementById('contextMenu').style.display='none';
+    document.getElementById('controlPanel').style.display='none';
+    return;
+  }
+  if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='w'){
+    e.preventDefault();const a=activeWindow();if(a)closeWindow(a);
+  }
+  if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='f'){
+    e.preventDefault();openApp('finder');
+    const w=document.getElementById('window-finder');const i=w.querySelector('[data-search]');if(i)i.focus();
+  }
+});
+
+window.addEventListener('resize',()=>{
+  if(innerWidth<=760)document.querySelectorAll('.window').forEach(w=>{
+    if(w.dataset.maximized==='true')return;
+    Object.assign(w.style,{left:'7px',top:'44px',width:(innerWidth-14)+'px',height:(desktop.clientHeight-53)+'px'});
+  });
+});
+</script>
+</body>
+</html>
